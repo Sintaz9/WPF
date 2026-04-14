@@ -1,0 +1,51 @@
+﻿using System.Windows;
+using Lab4._5.Models;
+
+namespace Lab4._5.Views
+{
+    public partial class ProductDetailWindow : Window
+    {
+        public Product SelectedProduct { get; set; }
+        public bool IsAdminMode { get; set; }
+
+        public ProductDetailWindow(Product product, bool isAdminMode)
+        {
+            InitializeComponent();
+
+            SelectedProduct = product;
+            IsAdminMode = isAdminMode;
+
+            DataContext = this;
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Будет реализовано в Этапе 3
+            MessageBox.Show($"Редактирование товара: {SelectedProduct.Name}\nБудет реализовано в Этапе 3",
+                          "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show($"Вы уверены, что хотите удалить товар '{SelectedProduct.Name}'?",
+                                       "Подтверждение удаления",
+                                       MessageBoxButton.YesNo,
+                                       MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // Будет реализовано в Этапе 3
+                MessageBox.Show("Удаление будет реализовано в Этапе 3",
+                              "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                DialogResult = true;
+                Close();
+            }
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
+        }
+    }
+}
