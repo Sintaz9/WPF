@@ -1,0 +1,113 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Menu -->
+    <system:String x:Key="MenuFile">File</system:String>
+    <system:String x:Key="MenuLoad">Load from file</system:String>
+    <system:String x:Key="MenuSave">Save to file</system:String>
+    <system:String x:Key="MenuExit">Exit</system:String>
+    <system:String x:Key="MenuProducts">Products</system:String>
+    <system:String x:Key="MenuAddProduct">Add product</system:String>
+    <system:String x:Key="MenuEditProduct">Edit</system:String>
+    <system:String x:Key="MenuDeleteProduct">Delete</system:String>
+
+    <!-- Control buttons -->
+    <system:String x:Key="BtnRefresh">Refresh</system:String>
+    <system:String x:Key="BtnSave">Save</system:String>
+    <system:String x:Key="BtnSearch">Search</system:String>
+    <system:String x:Key="BtnApply">Apply</system:String>
+    <system:String x:Key="BtnReset">Reset</system:String>
+    <system:String x:Key="BtnDetails">Details</system:String>
+    <system:String x:Key="BtnEdit">Edit</system:String>
+    <system:String x:Key="BtnDelete">Delete</system:String>
+    <system:String x:Key="BtnClose">Close</system:String>
+    <system:String x:Key="BtnAddImage">Add image</system:String>
+    <system:String x:Key="BtnRemoveImage">Remove selected</system:String>
+    <system:String x:Key="BtnSwitchToClient">Switch to Client</system:String>
+    <system:String x:Key="BtnSwitchToAdmin">Switch to Admin</system:String>
+
+    <!-- Roles -->
+    <system:String x:Key="RoleAdmin">Administrator</system:String>
+    <system:String x:Key="RoleClient">Client</system:String>
+    <system:String x:Key="LabelRole">Role:</system:String>
+
+    <!-- Filters -->
+    <system:String x:Key="FilterCategory">Filter by category:</system:String>
+    <system:String x:Key="FilterPriceFrom">Price from:</system:String>
+    <system:String x:Key="FilterPriceTo">to:</system:String>
+    <system:String x:Key="FilterStock">Stock:</system:String>
+    <system:String x:Key="FilterAll">All</system:String>
+    <system:String x:Key="FilterInStock">In stock</system:String>
+    <system:String x:Key="FilterOutOfStock">Out of stock</system:String>
+    <system:String x:Key="FilterRating">Rating from:</system:String>
+
+    <!-- Sorting -->
+    <system:String x:Key="SortLabel">Sort:</system:String>
+    <system:String x:Key="SortByName">By name</system:String>
+    <system:String x:Key="SortByPrice">By price</system:String>
+    <system:String x:Key="SortByRating">By rating</system:String>
+    <system:String x:Key="SortReset">Reset sort</system:String>
+
+    <!-- Product details -->
+    <system:String x:Key="ProductDetails">Product details</system:String>
+    <system:String x:Key="MainInfo">Main information</system:String>
+    <system:String x:Key="Category">Category:</system:String>
+    <system:String x:Key="Manufacturer">Manufacturer:</system:String>
+    <system:String x:Key="Country">Country:</system:String>
+    <system:String x:Key="ColorSize">Color/Size:</system:String>
+    <system:String x:Key="Description">Description</system:String>
+    <system:String x:Key="PriceAndStock">Price and stock</system:String>
+    <system:String x:Key="Price">Price:</system:String>
+    <system:String x:Key="Stock">Stock:</system:String>
+    <system:String x:Key="Quantity">Quantity:</system:String>
+    <system:String x:Key="AdditionalInfo">Additional information</system:String>
+    <system:String x:Key="ProductId">Product ID:</system:String>
+    <system:String x:Key="SoldCount">Sold:</system:String>
+    <system:String x:Key="Rating">Rating:</system:String>
+
+    <!-- Editing -->
+    <system:String x:Key="EditTitle">Edit product</system:String>
+    <system:String x:Key="AddTitle">Add new product</system:String>
+    <system:String x:Key="Name">Short name *</system:String>
+    <system:String x:Key="FullName">Full name *</system:String>
+    <system:String x:Key="CategoryLabel">Category *</system:String>
+    <system:String x:Key="PriceLabel">Price *</system:String>
+    <system:String x:Key="Discount">Discount (%)</system:String>
+    <system:String x:Key="QuantityLabel">Quantity *</system:String>
+    <system:String x:Key="CountryLabel">Country</system:String>
+    <system:String x:Key="ColorLabel">Color</system:String>
+    <system:String x:Key="SizeLabel">Size/Weight</system:String>
+    <system:String x:Key="ManufacturerLabel">Manufacturer</system:String>
+    <system:String x:Key="DescriptionLabel">Description *</system:String>
+    <system:String x:Key="RatingLabel">Rating (0-5)</system:String>
+    <system:String x:Key="ImagesLabel">Product images</system:String>
+    <system:String x:Key="RequiredFields">* - required fields</system:String>
+
+    <!-- Validation errors -->
+    <system:String x:Key="ErrorNameRequired">Name is required</system:String>
+    <system:String x:Key="ErrorNameLength">Name must be at least 2 characters</system:String>
+    <system:String x:Key="ErrorFullNameRequired">Full name is required</system:String>
+    <system:String x:Key="ErrorDescriptionRequired">Description is required</system:String>
+    <system:String x:Key="ErrorDescriptionLength">Description must be at least 10 characters</system:String>
+    <system:String x:Key="ErrorPriceRequired">Price is required</system:String>
+    <system:String x:Key="ErrorPriceInvalid">Enter valid price</system:String>
+    <system:String x:Key="ErrorDiscountInvalid">Discount must be 0-100</system:String>
+    <system:String x:Key="ErrorQuantityRequired">Quantity is required</system:String>
+    <system:String x:Key="ErrorQuantityInvalid">Enter valid quantity</system:String>
+    <system:String x:Key="ErrorRatingInvalid">Rating must be 0-5</system:String>
+
+    <!-- Status -->
+    <system:String x:Key="StatusReady">Ready</system:String>
+    <system:String x:Key="StatusLoaded">Products loaded:</system:String>
+    <system:String x:Key="StatusSaved">Products saved:</system:String>
+    <system:String x:Key="StatusAdded">Product added</system:String>
+    <system:String x:Key="StatusUpdated">Product updated</system:String>
+    <system:String x:Key="StatusDeleted">Product deleted</system:String>
+    <!-- Role -->
+    <system:String x:Key="SwitchToAdmin">Switch to Admin</system:String>
+    <system:String x:Key="SwitchToClient">Switch to Client</system:String>
+
+    <!-- Status bar -->
+    <system:String x:Key="ProductsCount">Products:</system:String>
+</ResourceDictionary>

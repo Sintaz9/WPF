@@ -27,7 +27,6 @@ namespace Lab4._5.ViewModels
         private string _ratingFilterText;
         private string _sortBy;
         private string _sortDirection;
-
         public MainViewModel()
         {
             _dataService = new DataService();
@@ -45,6 +44,7 @@ namespace Lab4._5.ViewModels
             ShowDetailsCommand = new RelayCommand(ShowDetails, CanShowDetails);
             ApplyFiltersCommand = new RelayCommand(_ => ApplyFilters());
             SortCommand = new RelayCommand(param => SortProducts(param?.ToString()));
+            SwitchLanguageCommand = new RelayCommand(lang => SwitchLanguage(lang?.ToString()));
 
             // Загружаем категории
             _categories = new ObservableCollection<Category>(_dataService.GetAllCategories());
@@ -54,6 +54,14 @@ namespace Lab4._5.ViewModels
         }
 
         #region Properties
+
+        public string RoleButtonText => IsAdminMode ?
+        Application.Current.TryFindResource("SwitchToClient") as string ?? "Переключить на Клиента" :
+        Application.Current.TryFindResource("SwitchToAdmin") as string ?? "Переключить на Администратора";
+
+        public string CurrentRole => IsAdminMode ?
+            Application.Current.TryFindResource("RoleAdmin") as string ?? "Администратор" :
+            Application.Current.TryFindResource("RoleClient") as string ?? "Клиент";
 
         public ObservableCollection<Product> Products
         {
@@ -145,8 +153,6 @@ namespace Lab4._5.ViewModels
             set { _sortDirection = value; OnPropertyChanged(); }
         }
 
-        public string RoleButtonText => IsAdminMode ? "Переключить на Клиента" : "Переключить на Администратора";
-        public string CurrentRole => IsAdminMode ? "Администратор" : "Клиент";
 
         #endregion
 
@@ -164,7 +170,7 @@ namespace Lab4._5.ViewModels
         public ICommand ShowDetailsCommand { get; }
         public ICommand ApplyFiltersCommand { get; }
         public ICommand SortCommand { get; }
-
+        public ICommand SwitchLanguageCommand { get; }
         #endregion
 
         #region File Operations
@@ -414,7 +420,11 @@ namespace Lab4._5.ViewModels
         {
             return parameter is Product || SelectedProduct != null;
         }
-
+        private void SwitchLanguage(string lang)
+        {
+            LocalizationService.SwitchLanguage(lang);
+            StatusText = $"Язык изменен на {(lang == "ru-RU" ? "Русский" : "English")}";
+        }
         private void ShowDetails(object parameter)
         {
             Product productToShow = parameter as Product ?? SelectedProduct;

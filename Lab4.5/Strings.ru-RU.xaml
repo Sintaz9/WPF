@@ -1,0 +1,119 @@
+﻿<Window x:Class="Lab4._5.Strings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab4._5"
+        mc:Ignorable="d"
+        Title="Strings" Height="450" Width="800">
+    <Grid>
+        <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+            <!-- Меню -->
+            <system:String x:Key="MenuFile">Файл</system:String>
+            <system:String x:Key="MenuLoad">Загрузить из файла</system:String>
+            <system:String x:Key="MenuSave">Сохранить в файл</system:String>
+            <system:String x:Key="MenuExit">Выход</system:String>
+            <system:String x:Key="MenuProducts">Товары</system:String>
+            <system:String x:Key="MenuAddProduct">Добавить товар</system:String>
+            <system:String x:Key="MenuEditProduct">Редактировать</system:String>
+            <system:String x:Key="MenuDeleteProduct">Удалить</system:String>
+
+            <!-- Кнопки управления -->
+            <system:String x:Key="BtnRefresh">Обновить</system:String>
+            <system:String x:Key="BtnSave">Сохранить</system:String>
+            <system:String x:Key="BtnSearch">Поиск</system:String>
+            <system:String x:Key="BtnApply">Применить</system:String>
+            <system:String x:Key="BtnReset">Сбросить</system:String>
+            <system:String x:Key="BtnDetails">Подробнее</system:String>
+            <system:String x:Key="BtnEdit">Редактировать</system:String>
+            <system:String x:Key="BtnDelete">Удалить</system:String>
+            <system:String x:Key="BtnClose">Закрыть</system:String>
+            <system:String x:Key="BtnAddImage">Добавить изображение</system:String>
+            <system:String x:Key="BtnRemoveImage">Удалить выбранное</system:String>
+            <system:String x:Key="BtnSwitchToClient">Переключить на Клиента</system:String>
+            <system:String x:Key="BtnSwitchToAdmin">Переключить на Администратора</system:String>
+
+            <!-- Роли -->
+            <system:String x:Key="RoleAdmin">Администратор</system:String>
+            <system:String x:Key="RoleClient">Клиент</system:String>
+            <system:String x:Key="LabelRole">Роль:</system:String>
+
+            <!-- Фильтры -->
+            <system:String x:Key="FilterCategory">Фильтр по категории:</system:String>
+            <system:String x:Key="FilterPriceFrom">Цена от:</system:String>
+            <system:String x:Key="FilterPriceTo">до:</system:String>
+            <system:String x:Key="FilterStock">Наличие:</system:String>
+            <system:String x:Key="FilterAll">Все</system:String>
+            <system:String x:Key="FilterInStock">В наличии</system:String>
+            <system:String x:Key="FilterOutOfStock">Нет в наличии</system:String>
+            <system:String x:Key="FilterRating">Рейтинг от:</system:String>
+
+            <!-- Сортировка -->
+            <system:String x:Key="SortLabel">Сортировка:</system:String>
+            <system:String x:Key="SortByName">По названию</system:String>
+            <system:String x:Key="SortByPrice">По цене</system:String>
+            <system:String x:Key="SortByRating">По рейтингу</system:String>
+            <system:String x:Key="SortReset">Сброс сортировки</system:String>
+
+            <!-- Детали товара -->
+            <system:String x:Key="ProductDetails">Детали товара</system:String>
+            <system:String x:Key="MainInfo">Основная информация</system:String>
+            <system:String x:Key="Category">Категория:</system:String>
+            <system:String x:Key="Manufacturer">Производитель:</system:String>
+            <system:String x:Key="Country">Страна:</system:String>
+            <system:String x:Key="ColorSize">Цвет/Размер:</system:String>
+            <system:String x:Key="Description">Описание</system:String>
+            <system:String x:Key="PriceAndStock">Цена и наличие</system:String>
+            <system:String x:Key="Price">Цена:</system:String>
+            <system:String x:Key="Stock">Наличие:</system:String>
+            <system:String x:Key="Quantity">Количество на складе:</system:String>
+            <system:String x:Key="AdditionalInfo">Дополнительная информация</system:String>
+            <system:String x:Key="ProductId">ID товара:</system:String>
+            <system:String x:Key="SoldCount">Продано:</system:String>
+            <system:String x:Key="Rating">Рейтинг:</system:String>
+
+            <!-- Редактирование -->
+            <system:String x:Key="EditTitle">Редактирование товара</system:String>
+            <system:String x:Key="AddTitle">Добавление нового товара</system:String>
+            <system:String x:Key="Name">Краткое название *</system:String>
+            <system:String x:Key="FullName">Полное название *</system:String>
+            <system:String x:Key="CategoryLabel">Категория *</system:String>
+            <system:String x:Key="PriceLabel">Цена *</system:String>
+            <system:String x:Key="Discount">Скидка (%)</system:String>
+            <system:String x:Key="QuantityLabel">Количество на складе *</system:String>
+            <system:String x:Key="CountryLabel">Страна происхождения</system:String>
+            <system:String x:Key="ColorLabel">Цвет упаковки</system:String>
+            <system:String x:Key="SizeLabel">Размер/Вес</system:String>
+            <system:String x:Key="ManufacturerLabel">Производитель</system:String>
+            <system:String x:Key="DescriptionLabel">Описание *</system:String>
+            <system:String x:Key="RatingLabel">Рейтинг (0-5)</system:String>
+            <system:String x:Key="ImagesLabel">Изображения товара</system:String>
+            <system:String x:Key="RequiredFields">* - обязательные поля</system:String>
+
+            <!-- Ошибки валидации -->
+            <system:String x:Key="ErrorNameRequired">Название обязательно</system:String>
+            <system:String x:Key="ErrorNameLength">Название должно быть не менее 2 символов</system:String>
+            <system:String x:Key="ErrorFullNameRequired">Полное название обязательно</system:String>
+            <system:String x:Key="ErrorDescriptionRequired">Описание обязательно</system:String>
+            <system:String x:Key="ErrorDescriptionLength">Описание должно быть не менее 10 символов</system:String>
+            <system:String x:Key="ErrorPriceRequired">Цена обязательна</system:String>
+            <system:String x:Key="ErrorPriceInvalid">Введите корректную цену</system:String>
+            <system:String x:Key="ErrorDiscountInvalid">Скидка должна быть от 0 до 100</system:String>
+            <system:String x:Key="ErrorQuantityRequired">Количество обязательно</system:String>
+            <system:String x:Key="ErrorQuantityInvalid">Введите корректное количество</system:String>
+            <system:String x:Key="ErrorRatingInvalid">Рейтинг должен быть от 0 до 5</system:String>
+
+            <!-- Статус -->
+            <system:String x:Key="StatusReady">Готов к работе</system:String>
+            <system:String x:Key="StatusLoaded">Загружено товаров:</system:String>
+            <system:String x:Key="StatusSaved">Сохранено товаров:</system:String>
+            <system:String x:Key="StatusAdded">Товар добавлен</system:String>
+            <system:String x:Key="StatusUpdated">Товар обновлен</system:String>
+            <system:String x:Key="StatusDeleted">Товар удален</system:String>
+
+        </ResourceDictionary>
+    </Grid>
+</Window>
