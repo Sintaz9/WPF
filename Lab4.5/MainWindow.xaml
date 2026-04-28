@@ -7,6 +7,7 @@
         MinHeight="400" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
         Cursor="/Resources/cursor.cur"
+        Background="#FAF1E1"
         Icon="/Resources/icon.ico">
 
     <Window.Resources>
@@ -62,20 +63,18 @@
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                 <Button Content="{DynamicResource BtnRefresh}" Command="{Binding LoadDataCommand}" 
                         Width="80" Margin="0,0,5,0"/>
-                <Button Content="{DynamicResource BtnSave}" Command="{Binding SaveCommand}" 
-                        Width="80"/>
+                <Button Content="{DynamicResource BtnSave}" Command="{Binding SaveCommand}" Width="80"/>
                 <Button Content="RU" Command="{Binding SwitchLanguageCommand}" 
                         CommandParameter="ru-RU" Width="35" Margin="10,0,2,0"/>
                 <Button Content="EN" Command="{Binding SwitchLanguageCommand}" 
-                        CommandParameter="en-US" Width="35" Margin="0,0,0,0"/>
+                        CommandParameter="en-US" Width="35"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                 <TextBlock Text="{DynamicResource LabelRole}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <TextBlock Text="{Binding CurrentRole}" VerticalAlignment="Center" 
                            FontWeight="Bold" Margin="0,0,10,0"/>
-                <Button Content="{Binding RoleButtonText}" Command="{Binding ToggleRoleCommand}" 
-                        Width="180"/>
+                <Button Content="{Binding RoleButtonText}" Command="{Binding ToggleRoleCommand}" Width="180"/>
             </StackPanel>
 
             <StackPanel HorizontalAlignment="Center">
@@ -86,42 +85,31 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="{DynamicResource SortLabel}" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"/>
-                    <Button Content="{DynamicResource SortByName}" Command="{Binding SortCommand}" 
-                            CommandParameter="name" Width="100" Margin="0,0,2,0"/>
-                    <Button Content="{DynamicResource SortByPrice}" Command="{Binding SortCommand}" 
-                            CommandParameter="price" Width="80" Margin="0,0,2,0"/>
-                    <Button Content="{DynamicResource SortByRating}" Command="{Binding SortCommand}" 
-                            CommandParameter="rating" Width="90" Margin="0,0,2,0"/>
-                    <Button Content="{DynamicResource SortReset}" Command="{Binding SortCommand}" 
-                            CommandParameter="reset" Width="60"/>
+                    <Button Content="{DynamicResource SortByName}" Command="{Binding SortCommand}" CommandParameter="name" Width="100"/>
+                    <Button Content="{DynamicResource SortByPrice}" Command="{Binding SortCommand}" CommandParameter="price" Width="80"/>
+                    <Button Content="{DynamicResource SortByRating}" Command="{Binding SortCommand}" CommandParameter="rating" Width="90"/>
+                    <Button Content="{DynamicResource SortReset}" Command="{Binding SortCommand}" CommandParameter="reset" Width="60"/>
                 </StackPanel>
             </StackPanel>
         </DockPanel>
 
-        <!-- Панель фильтров -->
-        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="#F5F5F5" CornerRadius="5" 
-                Padding="10" Margin="0,0,0,10">
+        <!-- Фильтры -->
+        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="White" CornerRadius="8" 
+                Padding="15" Margin="0,0,0,10" BorderBrush="#81A684" BorderThickness="1">
             <WrapPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,0,15,5">
                     <TextBlock Text="{DynamicResource FilterCategory}" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"/>
-                    <ComboBox ItemsSource="{Binding Categories}" 
-                              SelectedItem="{Binding SelectedCategory}"
-                              DisplayMemberPath="Name"
-                              Width="150"/>
+                    <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"
+                              DisplayMemberPath="Name" Width="150"/>
                 </StackPanel>
-
                 <StackPanel Orientation="Horizontal" Margin="0,0,15,5">
                     <TextBlock Text="{DynamicResource FilterPriceFrom}" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"/>
-                    <TextBox Text="{Binding PriceFromText, UpdateSourceTrigger=PropertyChanged}" 
-                             Width="70"/>
+                    <TextBox Text="{Binding PriceFromText, UpdateSourceTrigger=PropertyChanged}" Width="70"/>
                 </StackPanel>
-
                 <StackPanel Orientation="Horizontal" Margin="0,0,15,5">
                     <TextBlock Text="{DynamicResource FilterPriceTo}" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"/>
-                    <TextBox Text="{Binding PriceToText, UpdateSourceTrigger=PropertyChanged}" 
-                             Width="70"/>
+                    <TextBox Text="{Binding PriceToText, UpdateSourceTrigger=PropertyChanged}" Width="70"/>
                 </StackPanel>
-
                 <StackPanel Orientation="Horizontal" Margin="0,0,15,5">
                     <TextBlock Text="{DynamicResource FilterStock}" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"/>
                     <ComboBox SelectedIndex="{Binding InStockFilterIndex}" Width="120">
@@ -130,24 +118,18 @@
                         <ComboBoxItem Content="{DynamicResource FilterOutOfStock}"/>
                     </ComboBox>
                 </StackPanel>
-
                 <StackPanel Orientation="Horizontal" Margin="0,0,15,5">
                     <TextBlock Text="{DynamicResource FilterRating}" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"/>
-                    <TextBox Text="{Binding RatingFilterText, UpdateSourceTrigger=PropertyChanged}" 
-                             Width="50"/>
+                    <TextBox Text="{Binding RatingFilterText, UpdateSourceTrigger=PropertyChanged}" Width="50"/>
                 </StackPanel>
-
-                <Button Content="{DynamicResource BtnApply}" Command="{Binding ApplyFiltersCommand}" 
-                        Width="80" Margin="0,0,5,0"/>
-                <Button Content="{DynamicResource BtnReset}" Command="{Binding ClearFilterCommand}" 
-                        Width="80"/>
+                <Button Content="{DynamicResource BtnApply}" Command="{Binding ApplyFiltersCommand}" Width="80" Margin="0,0,5,0"/>
+                <Button Content="{DynamicResource BtnReset}" Command="{Binding ClearFilterCommand}" Width="80"/>
             </WrapPanel>
         </Border>
 
         <!-- Список товаров -->
         <ScrollViewer Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Auto">
-            <ListBox ItemsSource="{Binding Products}" 
-                     SelectedItem="{Binding SelectedProduct}"
+            <ListBox ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}"
                      Background="Transparent" BorderBrush="Transparent">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -159,30 +141,26 @@
                         <Border Style="{StaticResource ProductCardStyle}" Width="280">
                             <StackPanel>
                                 <Border Height="150" Margin="0,0,0,10" Background="#F5F5F5" CornerRadius="5">
-                                    <Image Source="{Binding FirstImagePath}" 
-                                           Stretch="Uniform"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"/>
+                                    <Image Source="{Binding FirstImagePath}" Stretch="Uniform"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
-                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" 
-                                           TextWrapping="Wrap" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,5"/>
                                 <TextBlock Text="{Binding CategoryId, Converter={StaticResource CategoryIdToNameConverter}}" 
                                            FontSize="12" Foreground="#666" Margin="0,0,0,5"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                                     <TextBlock Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}" 
                                                FontSize="16" Foreground="#FFD700"/>
-                                    <TextBlock Text="{Binding Rating, StringFormat={} {0:F1}}" 
-                                               FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    <TextBlock Text="{Binding Rating, StringFormat={} {0:F1}}" FontSize="12" 
+                                               VerticalAlignment="Center" Margin="5,0,0,0"/>
                                 </StackPanel>
-                                <TextBlock Text="{Binding Description}" FontSize="12" 
-                                           TextWrapping="Wrap" Height="40" Margin="0,0,0,10" Foreground="#555"/>
+                                <TextBlock Text="{Binding Description}" FontSize="12" TextWrapping="Wrap" 
+                                           Height="40" Margin="0,0,0,10" Foreground="#555"/>
                                 <StackPanel Margin="0,0,0,5">
                                     <TextBlock Text="{Binding FinalPrice, Converter={StaticResource PriceToStringConverter}}" 
                                                FontSize="18" FontWeight="Bold" Foreground="#2E7D32"/>
                                     <TextBlock Text="{Binding Price, Converter={StaticResource PriceToStringConverter}}" 
-                                               FontSize="12" Foreground="Gray"
-                                               Visibility="{Binding Discount, Converter={StaticResource DiscountToVisibilityConverter}}"
-                                               TextDecorations="Strikethrough"/>
+                                               FontSize="12" Foreground="Gray" TextDecorations="Strikethrough"
+                                               Visibility="{Binding Discount, Converter={StaticResource DiscountToVisibilityConverter}}"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                     <Ellipse Width="10" Height="10" Margin="0,0,5,0">
@@ -199,11 +177,9 @@
                                         </TextBlock.Text>
                                     </TextBlock>
                                 </StackPanel>
-                                <Button Content="{DynamicResource BtnDetails}" 
+                                <Button Content="{DynamicResource BtnDetails}" Background="#E63946" Foreground="White"
                                         Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"
-                                        CommandParameter="{Binding}"
-                                        Height="30" Margin="0,5,0,0"
-                                        Background="#4CAF50" Foreground="White" BorderThickness="0"/>
+                                        CommandParameter="{Binding}" Height="30" Margin="0,5,0,0" BorderThickness="0"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
@@ -211,18 +187,8 @@
             </ListBox>
         </ScrollViewer>
 
-        <!-- Боковая панель -->
-        <Border Grid.Row="3" Grid.Column="1" Width="200" Background="#F0F0F0" Padding="10" Margin="10,0,0,0">
-            <StackPanel>
-                <TextBlock Text="{Binding SelectedProduct.Name}" FontWeight="Bold" TextWrapping="Wrap" 
-                           Visibility="{Binding SelectedProduct, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding SelectedProduct.Price, Converter={StaticResource PriceToStringConverter}}" 
-                           Margin="0,5,0,0"
-                           Visibility="{Binding SelectedProduct, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            </StackPanel>
-        </Border>
 
-        <!-- Строка состояния -->
+        <!-- Статус бар -->
         <StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <StatusBarItem>
                 <TextBlock>

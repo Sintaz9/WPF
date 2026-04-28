@@ -12,10 +12,8 @@ namespace Lab4._5
             var dict = new ResourceDictionary();
             dict.Source = new Uri("Resources/Strings.ru-RU.xaml", UriKind.Relative);
 
-            var mainDict = new ResourceDictionary();
-            mainDict.MergedDictionaries.Add(dict);
-
-            Application.Current.Resources = mainDict;
+            Resources.MergedDictionaries.Clear();
+            Resources.MergedDictionaries.Add(dict);
         }
 
         public static void SwitchLanguage(string lang)
@@ -27,10 +25,8 @@ namespace Lab4._5
             else
                 dict.Source = new Uri("Resources/Strings.ru-RU.xaml", UriKind.Relative);
 
-            var mainDict = new ResourceDictionary();
-            mainDict.MergedDictionaries.Add(dict);
-
-            Application.Current.Resources = mainDict;
+            Application.Current.Resources.MergedDictionaries.Clear();
+            Application.Current.Resources.MergedDictionaries.Add(dict);
         }
     }
 }
