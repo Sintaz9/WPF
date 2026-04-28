@@ -21,6 +21,14 @@ namespace Lab4._5.ViewModels
         private string _statusText;
         private bool _isAdminMode;
 
+        // Новые свойства для фильтрации
+        private string _priceFromText;
+        private string _priceToText;
+        private bool? _inStockFilter;
+        private double? _minRatingFilter;
+        private string _sortBy;
+        private string _sortDirection;
+
         public MainViewModel()
         {
             _dataService = new DataService();
@@ -31,18 +39,37 @@ namespace Lab4._5.ViewModels
             EditProductCommand = new RelayCommand(_ => EditProduct(), _ => IsAdminMode && SelectedProduct != null);
             DeleteProductCommand = new RelayCommand(_ => DeleteProduct(), _ => IsAdminMode && SelectedProduct != null);
             SaveCommand = new RelayCommand(_ => SaveData());
-            FilterByCategoryCommand = new RelayCommand(_ => FilterByCategory());
-            ClearFilterCommand = new RelayCommand(_ => ClearFilter());
-            SearchCommand = new RelayCommand(_ => PerformSearch());
+            FilterByCategoryCommand = new RelayCommand(_ => ApplyFilters());
+            ClearFilterCommand = new RelayCommand(_ => ClearFilters());
+            SearchCommand = new RelayCommand(_ => ApplyFilters());
             ToggleRoleCommand = new RelayCommand(_ => ToggleRole());
-            ShowDetailsCommand = new RelayCommand(ShowDetails, CanShowDetails);  // ← ВОТ ЭТА СТРОКА
+            ShowDetailsCommand = new RelayCommand(ShowDetails, CanShowDetails);
+            ApplyFiltersCommand = new RelayCommand(_ => ApplyFilters());
+            SortCommand = new RelayCommand(param => SortProducts(param?.ToString()));
 
             // Загрузка данных
             LoadData();
         }
 
         #region Properties
+        private int _inStockFilterIndex;
+        private string _ratingFilterText;
 
+        public int InStockFilterIndex
+        {
+            get => _inStockFilterIndex;
+            set
+            {
+                _inStockFilterIndex = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string RatingFilterText
+        {
+            get => _ratingFilterText;
+            set { _ratingFilterText = value; OnPropertyChanged(); }
+        }
         public ObservableCollection<Product> Products
         {
             get => _products;
@@ -97,6 +124,43 @@ namespace Lab4._5.ViewModels
             }
         }
 
+        // Новые свойства фильтрации
+        public string PriceFromText
+        {
+            get => _priceFromText;
+            set { _priceFromText = value; OnPropertyChanged(); }
+        }
+
+        public string PriceToText
+        {
+            get => _priceToText;
+            set { _priceToText = value; OnPropertyChanged(); }
+        }
+
+        public bool? InStockFilter
+        {
+            get => _inStockFilter;
+            set { _inStockFilter = value; OnPropertyChanged(); }
+        }
+
+        public double? MinRatingFilter
+        {
+            get => _minRatingFilter;
+            set { _minRatingFilter = value; OnPropertyChanged(); }
+        }
+
+        public string SortBy
+        {
+            get => _sortBy;
+            set { _sortBy = value; OnPropertyChanged(); }
+        }
+
+        public string SortDirection
+        {
+            get => _sortDirection;
+            set { _sortDirection = value; OnPropertyChanged(); }
+        }
+
         public string RoleButtonText => IsAdminMode ? "Переключить на Клиента" : "Переключить на Администратора";
         public string CurrentRole => IsAdminMode ? "Администратор" : "Клиент";
 
@@ -113,7 +177,9 @@ namespace Lab4._5.ViewModels
         public ICommand ClearFilterCommand { get; }
         public ICommand SearchCommand { get; }
         public ICommand ToggleRoleCommand { get; }
-        public ICommand ShowDetailsCommand { get; }  // ← И СВОЙСТВО КОМАНДЫ
+        public ICommand ShowDetailsCommand { get; }
+        public ICommand ApplyFiltersCommand { get; }
+        public ICommand SortCommand { get; }
 
         #endregion
 
@@ -199,46 +265,132 @@ namespace Lab4._5.ViewModels
             }
         }
 
-        private void FilterByCategory()
+        private void ApplyFilters()
         {
-            if (SelectedCategory == null)
+            var allProducts = _dataService.GetAllProducts();
+            var filtered = allProducts.AsEnumerable();
+
+            // Фильтр по категории
+            if (SelectedCategory != null)
             {
-                ClearFilter();
-                return;
+                filtered = filtered.Where(p => p.CategoryId == SelectedCategory.Id);
             }
 
-            var allProducts = _dataService.GetAllProducts();
-            var filtered = allProducts.Where(p => p.CategoryId == SelectedCategory.Id).ToList();
+            // Поиск по тексту
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                var searchLower = SearchText.ToLower();
+                filtered = filtered.Where(p =>
+                    p.Name.ToLower().Contains(searchLower) ||
+                    p.FullName.ToLower().Contains(searchLower) ||
+                    p.Description.ToLower().Contains(searchLower)
+                );
+            }
+
+            // Фильтр по цене от
+            if (!string.IsNullOrWhiteSpace(PriceFromText) && decimal.TryParse(PriceFromText, out decimal priceFrom))
+            {
+                filtered = filtered.Where(p => p.FinalPrice >= priceFrom);
+            }
+
+            // Фильтр по цене до
+            if (!string.IsNullOrWhiteSpace(PriceToText) && decimal.TryParse(PriceToText, out decimal priceTo))
+            {
+                filtered = filtered.Where(p => p.FinalPrice <= priceTo);
+            }
+
+            // Фильтр по наличию
+            if (InStockFilterIndex == 1) // В наличии
+            {
+                filtered = filtered.Where(p => p.InStock);
+            }
+            else if (InStockFilterIndex == 2) // Нет в наличии
+            {
+                filtered = filtered.Where(p => !p.InStock);
+            }
+
+            // Фильтр по рейтингу
+            if (!string.IsNullOrWhiteSpace(RatingFilterText) && double.TryParse(RatingFilterText, out double minRating))
+            {
+                filtered = filtered.Where(p => p.Rating >= minRating);
+            }
+
+            // Сортировка
+            filtered = ApplySorting(filtered);
+
             Products = new ObservableCollection<Product>(filtered);
-            StatusText = $"Найдено товаров в категории '{SelectedCategory.Name}': {filtered.Count}";
+            StatusText = $"Найдено товаров: {Products.Count}";
         }
 
-        private void ClearFilter()
+        private IEnumerable<Product> ApplySorting(IEnumerable<Product> products)
         {
-            LoadData();
+            if (string.IsNullOrWhiteSpace(SortBy))
+                return products;
+
+            bool ascending = SortDirection != "desc";
+
+            switch (SortBy)
+            {
+                case "name":
+                    return ascending ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name);
+                case "price":
+                    return ascending ? products.OrderBy(p => p.FinalPrice) : products.OrderByDescending(p => p.FinalPrice);
+                case "rating":
+                    return ascending ? products.OrderBy(p => p.Rating) : products.OrderByDescending(p => p.Rating);
+                case "quantity":
+                    return ascending ? products.OrderBy(p => p.Quantity) : products.OrderByDescending(p => p.Quantity);
+                default:
+                    return products;
+            }
+        }
+
+        private void ClearFilters()
+        {
             SelectedCategory = null;
             SearchText = string.Empty;
+            PriceFromText = string.Empty;
+            PriceToText = string.Empty;
+            InStockFilterIndex = 0;
+            RatingFilterText = string.Empty;
+            SortBy = null;
+            SortDirection = null;
+
+            LoadData();
             StatusText = $"Сброшены фильтры. Всего товаров: {Products.Count}";
         }
 
-        private void PerformSearch()
+        private void SortProducts(string sortBy)
         {
-            if (string.IsNullOrWhiteSpace(SearchText))
+            if (sortBy == "reset")
             {
-                ClearFilter();
+                SortBy = null;
+                SortDirection = null;
+                ApplyFilters();
+                StatusText = "Сортировка сброшена";
                 return;
             }
 
-            var allProducts = _dataService.GetAllProducts();
-            var searchLower = SearchText.ToLower();
-            var filtered = allProducts.Where(p =>
-                p.Name.ToLower().Contains(searchLower) ||
-                p.FullName.ToLower().Contains(searchLower) ||
-                p.Description.ToLower().Contains(searchLower)
-            ).ToList();
+            if (SortBy == sortBy)
+            {
+                SortDirection = SortDirection == "asc" ? "desc" : "asc";
+            }
+            else
+            {
+                SortBy = sortBy;
+                SortDirection = "asc";
+            }
 
-            Products = new ObservableCollection<Product>(filtered);
-            StatusText = $"Найдено по запросу '{SearchText}': {filtered.Count} товаров";
+            ApplyFilters();
+
+            string direction = SortDirection == "asc" ? "возрастанию" : "убыванию";
+            string sortName = sortBy switch
+            {
+                "name" => "названию",
+                "price" => "цене",
+                "rating" => "рейтингу",
+                _ => sortBy
+            };
+            StatusText = $"Сортировка по {sortName} ({direction}). Найдено: {Products.Count}";
         }
 
         private void ToggleRole()
@@ -261,10 +413,9 @@ namespace Lab4._5.ViewModels
                 var detailsWindow = new ProductDetailWindow(productToShow, IsAdminMode);
                 detailsWindow.ShowDialog();
 
-                // Если в окне детализации произошли изменения (например, удаление)
                 if (detailsWindow.DialogResult == true)
                 {
-                    LoadData(); // Перезагружаем данные
+                    LoadData();
                 }
             }
         }
