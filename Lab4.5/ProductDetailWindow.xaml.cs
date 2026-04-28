@@ -20,9 +20,14 @@ namespace Lab4._5.Views
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            // Будет реализовано в Этапе 3
-            MessageBox.Show($"Редактирование товара: {SelectedProduct.Name}\nБудет реализовано в Этапе 3",
-                          "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            var editWindow = new ProductEditWindow(SelectedProduct);
+            editWindow.Owner = this;
+
+            if (editWindow.ShowDialog() == true && editWindow.EditedProduct != null)
+            {
+                DialogResult = true;
+                Close();
+            }
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)

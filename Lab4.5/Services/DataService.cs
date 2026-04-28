@@ -119,6 +119,27 @@ namespace Lab4._5.Services
             catch { }
         }
 
+        public void AddProduct(Product product)
+        {
+            if (product.Id == 0)
+            {
+                product.Id = _products.Any() ? _products.Max(p => p.Id) + 1 : 1;
+            }
+            _products.Add(product);
+            SaveData();
+        }
+
+        public void UpdateProduct(Product updatedProduct)
+        {
+            var existing = _products.FirstOrDefault(p => p.Id == updatedProduct.Id);
+            if (existing != null)
+            {
+                var index = _products.IndexOf(existing);
+                _products[index] = updatedProduct;
+                SaveData();
+            }
+        }
+
         public List<Product> GetAllProducts()
         {
             return _products.ToList();

@@ -158,17 +158,30 @@ namespace Lab4._5.ViewModels
 
         private void AddProduct()
         {
-            MessageBox.Show("Добавление товара будет реализовано в Этапе 3", "Информация",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            var editWindow = new ProductEditWindow();
+            editWindow.Owner = Application.Current.MainWindow;
+
+            if (editWindow.ShowDialog() == true && editWindow.EditedProduct != null)
+            {
+                _dataService.AddProduct(editWindow.EditedProduct);
+                LoadData();
+                StatusText = $"Товар '{editWindow.EditedProduct.Name}' добавлен";
+            }
         }
 
         private void EditProduct()
         {
             if (SelectedProduct == null) return;
 
-            // Открываем окно детализации (редактирование будет в Этапе 3)
-            var detailsWindow = new ProductDetailWindow(SelectedProduct, IsAdminMode);
-            detailsWindow.ShowDialog();
+            var editWindow = new ProductEditWindow(SelectedProduct);
+            editWindow.Owner = Application.Current.MainWindow;
+
+            if (editWindow.ShowDialog() == true && editWindow.EditedProduct != null)
+            {
+                _dataService.UpdateProduct(editWindow.EditedProduct);
+                LoadData();
+                StatusText = $"Товар '{editWindow.EditedProduct.Name}' обновлен";
+            }
         }
 
         private void DeleteProduct()
