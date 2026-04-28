@@ -58,6 +58,8 @@ namespace Lab4._5.Models
             set { _categoryId = value; OnPropertyChanged(); }
         }
 
+        public List<int> RelatedProductIds { get; set; } = new List<int>();
+
         public double Rating
         {
             get => _rating;

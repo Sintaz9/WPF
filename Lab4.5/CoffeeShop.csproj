@@ -16,4 +16,27 @@
     <Page Remove="Views\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\cursor.cur" />
+    <None Remove="Resources\icon.ico" />
+    <None Remove="Resources\Pepe.cur" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Resources\Strings.en-US.xaml" />
+    <Page Remove="Resources\Strings.ru-RU.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\cursor.cur" />
+    <Resource Include="Resources\icon.ico" />
+    <Resource Include="Resources\Pepe.cur" />
+    <Resource Include="Resources\Strings.en-US.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Strings.ru-RU.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
 </Project>

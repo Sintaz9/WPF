@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using Lab4._5.Services;
+﻿using System;
+using System.Windows;
 
 namespace Lab4._5
 {
@@ -8,7 +8,29 @@ namespace Lab4._5
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            LocalizationService.SwitchLanguage("ru-RU");
+
+            var dict = new ResourceDictionary();
+            dict.Source = new Uri("Resources/Strings.ru-RU.xaml", UriKind.Relative);
+
+            var mainDict = new ResourceDictionary();
+            mainDict.MergedDictionaries.Add(dict);
+
+            Application.Current.Resources = mainDict;
+        }
+
+        public static void SwitchLanguage(string lang)
+        {
+            var dict = new ResourceDictionary();
+
+            if (lang == "en-US")
+                dict.Source = new Uri("Resources/Strings.en-US.xaml", UriKind.Relative);
+            else
+                dict.Source = new Uri("Resources/Strings.ru-RU.xaml", UriKind.Relative);
+
+            var mainDict = new ResourceDictionary();
+            mainDict.MergedDictionaries.Add(dict);
+
+            Application.Current.Resources = mainDict;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Lab4._5.Views
                 "Магазин кофе и чая\n" +
                 "Лабораторная работа №4-5\n" +
                 "WPF приложение для продажи товаров\n\n" +
-                "© 2024",
+                "© 2026",
                 "О программе",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);

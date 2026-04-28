@@ -26,6 +26,8 @@ namespace Lab4._5.ViewModels
         private int _inStockFilterIndex;
         private string _ratingFilterText;
         private string _sortBy;
+        private string _productsCountText = "Товаров";
+
         private string _sortDirection;
         public MainViewModel()
         {
@@ -85,7 +87,11 @@ namespace Lab4._5.ViewModels
                 CommandManager.InvalidateRequerySuggested();
             }
         }
-
+        public string ProductsCountText
+        {
+            get => _productsCountText;
+            set { _productsCountText = value; OnPropertyChanged(); }
+        }
         public Category SelectedCategory
         {
             get => _selectedCategory;
@@ -420,10 +426,14 @@ namespace Lab4._5.ViewModels
         {
             return parameter is Product || SelectedProduct != null;
         }
+        // В методе SwitchLanguage обновите:
         private void SwitchLanguage(string lang)
         {
-            LocalizationService.SwitchLanguage(lang);
-            StatusText = $"Язык изменен на {(lang == "ru-RU" ? "Русский" : "English")}";
+            App.SwitchLanguage(lang);
+            OnPropertyChanged(nameof(CurrentRole));
+            OnPropertyChanged(nameof(RoleButtonText));
+            ProductsCountText = lang == "ru-RU" ? "Товаров:" : "Products:";
+            StatusText = lang == "ru-RU" ? "Язык: Русский" : "Language: English";
         }
         private void ShowDetails(object parameter)
         {
