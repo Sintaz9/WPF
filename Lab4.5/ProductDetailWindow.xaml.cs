@@ -25,8 +25,11 @@ namespace Lab4._5.Views
 
             if (editWindow.ShowDialog() == true && editWindow.EditedProduct != null)
             {
+                // Обновляем данные текущего товара
+                SelectedProduct = editWindow.EditedProduct;
+                DataContext = null;
+                DataContext = this;
                 DialogResult = true;
-                Close();
             }
         }
 
@@ -39,9 +42,6 @@ namespace Lab4._5.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                // Будет реализовано в Этапе 3
-                MessageBox.Show("Удаление будет реализовано в Этапе 3",
-                              "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 DialogResult = true;
                 Close();
             }

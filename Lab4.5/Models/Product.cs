@@ -4,26 +4,29 @@ using System.Runtime.CompilerServices;
 
 namespace Lab4._5.Models
 {
-    /// <summary>
-    /// Модель товара (чай или кофе)
-    /// </summary>
     public class Product : INotifyPropertyChanged
     {
         private int _id;
-        private string _name;              // краткое название
-        private string _fullName;          // полное название
-        private string _description;       // описание
-        private int _categoryId;           // категория
-        private double _rating;            // рейтинг 0-5
-        private decimal _price;            // цена
-        private int _quantity;             // количество на складе
-        private string _color;             // цвет упаковки
-        private string _size;              // размер (250г, 500г)
-        private string _country;           // страна происхождения
-        private double _discount;          // скидка %
-        private bool _inStock;             // в наличии
-        private int _soldCount;            // количество проданных
-        private string _manufacturer;      // производитель
+        private string _name;
+        private string _fullName;
+        private string _description;
+        private int _categoryId;
+        private double _rating;
+        private decimal _price;
+        private int _quantity;
+        private string _color;
+        private string _size;
+        private string _country;
+        private double _discount;
+        private bool _inStock;
+        private int _soldCount;
+        private string _manufacturer;
+        private ObservableCollection<string> _imagePaths;
+
+        public Product()
+        {
+            _imagePaths = new ObservableCollection<string>();
+        }
 
         public int Id
         {
@@ -115,7 +118,26 @@ namespace Lab4._5.Models
             set { _manufacturer = value; OnPropertyChanged(); }
         }
 
-        // Цена со скидкой (вычисляемое свойство)
+        public ObservableCollection<string> ImagePaths
+        {
+            get => _imagePaths;
+            set { _imagePaths = value; OnPropertyChanged(); }
+        }
+
+        // Для удобства отображения первого изображения
+        public string FirstImagePath
+        {
+            get
+            {
+                if (ImagePaths != null && ImagePaths.Count > 0)
+                {
+                    // Проверяем существует ли файл
+                    if (System.IO.File.Exists(ImagePaths[0]))
+                        return ImagePaths[0];
+                }
+                return null;
+            }
+        }
         public decimal FinalPrice => Price - (Price * (decimal)(Discount / 100));
 
         public event PropertyChangedEventHandler PropertyChanged;

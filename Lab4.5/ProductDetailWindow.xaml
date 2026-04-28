@@ -42,12 +42,22 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Top">
-                    <TextBlock Text="{Binding SelectedProduct.Rating, StringFormat='Рейтинг: {0:F1}'}" 
-                               FontSize="14" HorizontalAlignment="Right"/>
+                    <TextBlock FontSize="14" HorizontalAlignment="Right">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="Рейтинг: {0:F1}">
+                                <Binding Path="SelectedProduct.Rating"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
                     <TextBlock Text="{Binding SelectedProduct.Rating, Converter={StaticResource RatingToStarsConverter}}" 
                                FontSize="20" Foreground="#FFD700" HorizontalAlignment="Right"/>
-                    <TextBlock Text="{Binding SelectedProduct.SoldCount, StringFormat='Куплено: {0} раз'}" 
-                               FontSize="12" Foreground="#666" HorizontalAlignment="Right" Margin="0,5,0,0"/>
+                    <TextBlock FontSize="12" Foreground="#666" HorizontalAlignment="Right" Margin="0,5,0,0">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="Куплено: {0} раз">
+                                <Binding Path="SelectedProduct.SoldCount"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
                 </StackPanel>
             </Grid>
         </Border>
@@ -55,13 +65,24 @@
         <!-- Основное содержимое -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <!-- Изображение (заглушка) -->
-                <Border Background="#F5F5F5" Height="200" Margin="0,0,0,15" CornerRadius="5">
-                    <TextBlock Text="Изображение товара" 
-                               HorizontalAlignment="Center" 
-                               VerticalAlignment="Center"
-                               FontSize="16" Foreground="#999"/>
-                </Border>
+                <!-- Изображения -->
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" 
+                              Height="200" Margin="0,0,0,15">
+                    <ItemsControl ItemsSource="{Binding SelectedProduct.ImagePaths}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding}" 
+                                       Height="200" Width="200" 
+                                       Stretch="Uniform" Margin="0,0,10,0"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
 
                 <!-- Основная информация -->
                 <TextBlock Text="Основная информация" FontWeight="Bold" FontSize="14" 
@@ -117,7 +138,6 @@
 
                 <Border Background="#F9F9F9" Padding="15" CornerRadius="5" Margin="0,0,0,10">
                     <StackPanel>
-                        <!-- Цена -->
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <TextBlock Text="Цена: " FontWeight="Bold" 
                                        VerticalAlignment="Center" Margin="0,0,10,0"/>
@@ -133,7 +153,6 @@
                                        Visibility="{Binding SelectedProduct.Discount, Converter={StaticResource DiscountToVisibilityConverter}}"/>
                         </StackPanel>
 
-                        <!-- Наличие -->
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <TextBlock Text="Наличие: " FontWeight="Bold" 
                                        VerticalAlignment="Center" Margin="0,0,10,0"/>
@@ -152,7 +171,6 @@
                             </TextBlock>
                         </StackPanel>
 
-                        <!-- Количество -->
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Количество на складе: " FontWeight="Bold" 
                                        VerticalAlignment="Center" Margin="0,0,10,0"/>
@@ -182,7 +200,13 @@
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Продано:" 
                                FontWeight="Bold" Margin="0,0,0,5"/>
-                    <TextBlock Text="{Binding SelectedProduct.Price, Converter={StaticResource PriceToStringConverter}}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} шт.">
+                                <Binding Path="SelectedProduct.SoldCount"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

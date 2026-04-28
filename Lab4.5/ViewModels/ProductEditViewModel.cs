@@ -39,6 +39,7 @@ namespace Lab4._5.ViewModels
         public ProductEditViewModel(Product product = null)
         {
             Categories = new ObservableCollection<Category>(Category.GetCategories());
+            ImagePaths = new ObservableCollection<string>();
 
             if (product != null)
             {
@@ -133,6 +134,35 @@ namespace Lab4._5.ViewModels
             get => _ratingText;
             set { _ratingText = value; OnPropertyChanged(); ValidateRating(); }
         }
+
+        private ObservableCollection<string> _imagePaths;
+        private string _selectedImagePath;
+
+        public ObservableCollection<string> ImagePaths
+        {
+            get => _imagePaths;
+            set { _imagePaths = value; OnPropertyChanged(); }
+        }
+
+        public string SelectedImagePath
+        {
+            get => _selectedImagePath;
+            set { _selectedImagePath = value; OnPropertyChanged(); }
+        }
+
+
+
+
+
+
+
+
+
+     
+
+
+
+
 
         // Ошибки
         public string NameError { get => _nameError; set { _nameError = value; OnPropertyChanged(); OnPropertyChanged(nameof(HasNameError)); } }
@@ -245,6 +275,27 @@ namespace Lab4._5.ViewModels
         #endregion
 
         #region Methods
+        public void AddImage()
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Выберите изображение товара",
+                Filter = "Изображения (*.jpg;*.jpeg;*.png;*.bmp)|*.jpg;*.jpeg;*.png;*.bmp|Все файлы (*.*)|*.*"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                ImagePaths.Add(dialog.FileName);
+            }
+        }
+
+        public void RemoveImage()
+        {
+            if (SelectedImagePath != null)
+            {
+                ImagePaths.Remove(SelectedImagePath);
+            }
+        }
 
         private void LoadProduct(Product product)
         {
@@ -260,6 +311,8 @@ namespace Lab4._5.ViewModels
             Size = product.Size;
             Manufacturer = product.Manufacturer;
             RatingText = product.Rating.ToString();
+
+            ImagePaths = new ObservableCollection<string>(product.ImagePaths ?? new ObservableCollection<string>());
         }
 
         public Product GetProduct()
@@ -279,6 +332,7 @@ namespace Lab4._5.ViewModels
             product.Size = Size ?? "";
             product.Manufacturer = Manufacturer ?? "";
             product.Rating = double.TryParse(RatingText, out double rating) ? rating : 0;
+            product.ImagePaths = new ObservableCollection<string>(ImagePaths);
 
             // Если это новый продукт, генерируем ID
             if (!_isEditMode)
@@ -287,7 +341,7 @@ namespace Lab4._5.ViewModels
             }
 
             return product;
-        }
+        }   
 
         private int GenerateNewId()
         {
@@ -296,6 +350,7 @@ namespace Lab4._5.ViewModels
         }
 
         #endregion
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -7,6 +7,7 @@ using Lab4._5.Commands;
 using Lab4._5.Models;
 using Lab4._5.Services;
 using Lab4._5.Views;
+using Microsoft.Win32;
 
 namespace Lab4._5.ViewModels
 {
@@ -20,12 +21,10 @@ namespace Lab4._5.ViewModels
         private string _searchText;
         private string _statusText;
         private bool _isAdminMode;
-
-        // Новые свойства для фильтрации
         private string _priceFromText;
         private string _priceToText;
-        private bool? _inStockFilter;
-        private double? _minRatingFilter;
+        private int _inStockFilterIndex;
+        private string _ratingFilterText;
         private string _sortBy;
         private string _sortDirection;
 
@@ -34,11 +33,11 @@ namespace Lab4._5.ViewModels
             _dataService = new DataService();
 
             // Инициализация команд
-            LoadDataCommand = new RelayCommand(_ => LoadData());
+            LoadDataCommand = new RelayCommand(_ => LoadFromFile());
+            SaveCommand = new RelayCommand(_ => SaveToFile());
             AddProductCommand = new RelayCommand(_ => AddProduct(), _ => IsAdminMode);
             EditProductCommand = new RelayCommand(_ => EditProduct(), _ => IsAdminMode && SelectedProduct != null);
             DeleteProductCommand = new RelayCommand(_ => DeleteProduct(), _ => IsAdminMode && SelectedProduct != null);
-            SaveCommand = new RelayCommand(_ => SaveData());
             FilterByCategoryCommand = new RelayCommand(_ => ApplyFilters());
             ClearFilterCommand = new RelayCommand(_ => ClearFilters());
             SearchCommand = new RelayCommand(_ => ApplyFilters());
@@ -47,29 +46,15 @@ namespace Lab4._5.ViewModels
             ApplyFiltersCommand = new RelayCommand(_ => ApplyFilters());
             SortCommand = new RelayCommand(param => SortProducts(param?.ToString()));
 
-            // Загрузка данных
-            LoadData();
+            // Загружаем категории
+            _categories = new ObservableCollection<Category>(_dataService.GetAllCategories());
+            _products = new ObservableCollection<Product>();
+
+            StatusText = "Готов к работе. Создайте товары или загрузите из файла.";
         }
 
         #region Properties
-        private int _inStockFilterIndex;
-        private string _ratingFilterText;
 
-        public int InStockFilterIndex
-        {
-            get => _inStockFilterIndex;
-            set
-            {
-                _inStockFilterIndex = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string RatingFilterText
-        {
-            get => _ratingFilterText;
-            set { _ratingFilterText = value; OnPropertyChanged(); }
-        }
         public ObservableCollection<Product> Products
         {
             get => _products;
@@ -124,7 +109,6 @@ namespace Lab4._5.ViewModels
             }
         }
 
-        // Новые свойства фильтрации
         public string PriceFromText
         {
             get => _priceFromText;
@@ -137,16 +121,16 @@ namespace Lab4._5.ViewModels
             set { _priceToText = value; OnPropertyChanged(); }
         }
 
-        public bool? InStockFilter
+        public int InStockFilterIndex
         {
-            get => _inStockFilter;
-            set { _inStockFilter = value; OnPropertyChanged(); }
+            get => _inStockFilterIndex;
+            set { _inStockFilterIndex = value; OnPropertyChanged(); }
         }
 
-        public double? MinRatingFilter
+        public string RatingFilterText
         {
-            get => _minRatingFilter;
-            set { _minRatingFilter = value; OnPropertyChanged(); }
+            get => _ratingFilterText;
+            set { _ratingFilterText = value; OnPropertyChanged(); }
         }
 
         public string SortBy
@@ -169,10 +153,10 @@ namespace Lab4._5.ViewModels
         #region Commands
 
         public ICommand LoadDataCommand { get; }
+        public ICommand SaveCommand { get; }
         public ICommand AddProductCommand { get; }
         public ICommand EditProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
-        public ICommand SaveCommand { get; }
         public ICommand FilterByCategoryCommand { get; }
         public ICommand ClearFilterCommand { get; }
         public ICommand SearchCommand { get; }
@@ -183,44 +167,70 @@ namespace Lab4._5.ViewModels
 
         #endregion
 
-        #region Methods
+        #region File Operations
 
-        private void LoadData()
+        private void LoadFromFile()
         {
-            try
+            var dialog = new OpenFileDialog
             {
-                var allProducts = _dataService.GetAllProducts();
-                Products = new ObservableCollection<Product>(allProducts);
+                Title = "Выберите файл с товарами",
+                Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*",
+                DefaultExt = ".json"
+            };
 
-                var allCategories = _dataService.GetAllCategories();
-                Categories = new ObservableCollection<Category>(allCategories);
-
-                StatusText = $"Загружено товаров: {Products.Count}";
-            }
-            catch (Exception ex)
+            if (dialog.ShowDialog() == true)
             {
-                StatusText = $"Ошибка загрузки: {ex.Message}";
-                MessageBox.Show($"Ошибка при загрузке данных: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                try
+                {
+                    _dataService.LoadFromFile(dialog.FileName);
+                    RefreshProductsList();
+                    StatusText = $"Загружено товаров: {Products.Count} из файла {System.IO.Path.GetFileName(dialog.FileName)}";
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при загрузке файла:\n{ex.Message}", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
-        private void SaveData()
+        private void SaveToFile()
         {
-            try
+            if (Products.Count == 0)
             {
-                _dataService.SaveProducts(Products.ToList());
-                StatusText = $"Сохранено товаров: {Products.Count}";
-                MessageBox.Show("Данные успешно сохранены!", "Успех",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Нет товаров для сохранения. Сначала добавьте товары.",
+                    "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
-            catch (Exception ex)
+
+            var dialog = new SaveFileDialog
             {
-                StatusText = $"Ошибка сохранения: {ex.Message}";
-                MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                Title = "Сохранить товары в файл",
+                Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*",
+                DefaultExt = ".json",
+                FileName = "products.json"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                try
+                {
+                    _dataService.SaveToFile(dialog.FileName);
+                    StatusText = $"Сохранено {Products.Count} товаров в файл {System.IO.Path.GetFileName(dialog.FileName)}";
+                    MessageBox.Show($"Товары успешно сохранены в файл:\n{dialog.FileName}",
+                        "Сохранение", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при сохранении:\n{ex.Message}", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
+
+        #endregion
+
+        #region Product Operations
 
         private void AddProduct()
         {
@@ -230,8 +240,8 @@ namespace Lab4._5.ViewModels
             if (editWindow.ShowDialog() == true && editWindow.EditedProduct != null)
             {
                 _dataService.AddProduct(editWindow.EditedProduct);
-                LoadData();
-                StatusText = $"Товар '{editWindow.EditedProduct.Name}' добавлен";
+                RefreshProductsList();
+                StatusText = $"Товар '{editWindow.EditedProduct.Name}' добавлен (не сохранен в файл)";
             }
         }
 
@@ -245,8 +255,8 @@ namespace Lab4._5.ViewModels
             if (editWindow.ShowDialog() == true && editWindow.EditedProduct != null)
             {
                 _dataService.UpdateProduct(editWindow.EditedProduct);
-                LoadData();
-                StatusText = $"Товар '{editWindow.EditedProduct.Name}' обновлен";
+                RefreshProductsList();
+                StatusText = $"Товар '{editWindow.EditedProduct.Name}' обновлен (не сохранен в файл)";
             }
         }
 
@@ -259,11 +269,15 @@ namespace Lab4._5.ViewModels
 
             if (result == MessageBoxResult.Yes)
             {
-                Products.Remove(SelectedProduct);
-                _dataService.SaveProducts(Products.ToList());
-                StatusText = $"Товар удален. Всего товаров: {Products.Count}";
+                _dataService.DeleteProduct(SelectedProduct.Id);
+                RefreshProductsList();
+                StatusText = $"Товар удален (изменения не сохранены в файл)";
             }
         }
+
+        #endregion
+
+        #region Filters
 
         private void ApplyFilters()
         {
@@ -300,11 +314,11 @@ namespace Lab4._5.ViewModels
             }
 
             // Фильтр по наличию
-            if (InStockFilterIndex == 1) // В наличии
+            if (InStockFilterIndex == 1)
             {
                 filtered = filtered.Where(p => p.InStock);
             }
-            else if (InStockFilterIndex == 2) // Нет в наличии
+            else if (InStockFilterIndex == 2)
             {
                 filtered = filtered.Where(p => !p.InStock);
             }
@@ -337,8 +351,6 @@ namespace Lab4._5.ViewModels
                     return ascending ? products.OrderBy(p => p.FinalPrice) : products.OrderByDescending(p => p.FinalPrice);
                 case "rating":
                     return ascending ? products.OrderBy(p => p.Rating) : products.OrderByDescending(p => p.Rating);
-                case "quantity":
-                    return ascending ? products.OrderBy(p => p.Quantity) : products.OrderByDescending(p => p.Quantity);
                 default:
                     return products;
             }
@@ -355,8 +367,8 @@ namespace Lab4._5.ViewModels
             SortBy = null;
             SortDirection = null;
 
-            LoadData();
-            StatusText = $"Сброшены фильтры. Всего товаров: {Products.Count}";
+            RefreshProductsList();
+            StatusText = "Фильтры сброшены";
         }
 
         private void SortProducts(string sortBy)
@@ -381,16 +393,15 @@ namespace Lab4._5.ViewModels
             }
 
             ApplyFilters();
+        }
 
-            string direction = SortDirection == "asc" ? "возрастанию" : "убыванию";
-            string sortName = sortBy switch
-            {
-                "name" => "названию",
-                "price" => "цене",
-                "rating" => "рейтингу",
-                _ => sortBy
-            };
-            StatusText = $"Сортировка по {sortName} ({direction}). Найдено: {Products.Count}";
+        #endregion
+
+        #region Helpers
+
+        private void RefreshProductsList()
+        {
+            Products = new ObservableCollection<Product>(_dataService.GetAllProducts());
         }
 
         private void ToggleRole()
@@ -415,7 +426,7 @@ namespace Lab4._5.ViewModels
 
                 if (detailsWindow.DialogResult == true)
                 {
-                    LoadData();
+                    RefreshProductsList();
                 }
             }
         }

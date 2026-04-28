@@ -1,0 +1,44 @@
+[
+  {
+    "Id": 3,
+    "Name": "\u0414\u0430\u0439 \u0425\u0443\u043D \u041F\u0430",
+    "FullName": "\u041A\u0440\u0430\u0441\u043D\u044B\u0439 \u0445\u0430\u043B\u0430\u0442, \u0443\u043B\u0443\u043D 100\u0433",
+    "Description": "\u0417\u043D\u0430\u043C\u0435\u043D\u0438\u0442\u044B\u0439 \u043A\u0438\u0442\u0430\u0439\u0441\u043A\u0438\u0439 \u0443\u043B\u0443\u043D \u0441 \u0433\u043B\u0443\u0431\u043E\u043A\u0438\u043C \u0432\u043A\u0443\u0441\u043E\u043C.",
+    "CategoryId": 6,
+    "Rating": 4.9,
+    "Price": 2350,
+    "Quantity": 18,
+    "Color": "\u0422\u0435\u043C\u043D\u043E-\u043A\u043E\u0440\u0438\u0447\u043D\u0435\u0432\u044B\u0439",
+    "Size": "100\u0433",
+    "Country": "\u041A\u0438\u0442\u0430\u0439",
+    "Discount": 0,
+    "InStock": true,
+    "SoldCount": 42,
+    "Manufacturer": "Wuyi Star Tea",
+    "ImagePaths": [
+      "C:\\Users\\ADMIN\\Pictures\\PC\\1366x768_782377_[www.ArtFile.ru].jpg"
+    ],
+    "FirstImagePath": "C:\\Users\\ADMIN\\Pictures\\PC\\1366x768_782377_[www.ArtFile.ru].jpg",
+    "FinalPrice": 2350
+  },
+  {
+    "Id": 8558,
+    "Name": "\u0423\u043B\u0443\u043D",
+    "FullName": "\u0427\u0430\u0439\u043D\u044B\u0439 \u0434\u0440\u0430\u043A\u043E\u043D",
+    "Description": "\u041E\u0447\u0435\u043D\u044C \u043A\u0440\u0435\u043F\u043A\u0438\u0439 \u0438 \u0432\u043A\u0443\u0441\u043D\u044B\u0439 \u0447\u0430\u0439",
+    "CategoryId": 6,
+    "Rating": 4,
+    "Price": 1500,
+    "Quantity": 100,
+    "Color": "",
+    "Size": "",
+    "Country": "",
+    "Discount": 5,
+    "InStock": true,
+    "SoldCount": 0,
+    "Manufacturer": "",
+    "ImagePaths": [],
+    "FirstImagePath": null,
+    "FinalPrice": 1425.00
+  }
+]

@@ -40,5 +40,39 @@ namespace Lab4._5.Views
             DialogResult = false;
             Close();
         }
+
+        private void AddImage_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.AddImage();
+            UpdatePreview();
+        }
+
+        private void RemoveImage_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.RemoveImage();
+            UpdatePreview();
+        }
+
+        private void UpdatePreview()
+        {
+            if (_viewModel.ImagePaths.Count > 0)
+            {
+                try
+                {
+                    var bitmap = new System.Windows.Media.Imaging.BitmapImage(
+                        new Uri(_viewModel.ImagePaths[0], UriKind.Absolute));
+                    PreviewImage.Source = bitmap;
+                    PreviewImage.Visibility = Visibility.Visible;
+                }
+                catch
+                {
+                    PreviewImage.Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                PreviewImage.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }
