@@ -48,7 +48,7 @@ namespace Lab4._5.ViewModels
             SortCommand = new RelayCommand(param => SortProducts(param?.ToString()));
             SwitchLanguageCommand = new RelayCommand(lang => SwitchLanguage(lang?.ToString()));
             BuyProductCommand = new RelayCommand(BuyProduct, CanBuyProduct);
-
+            SwitchThemeCommand = new RelayCommand(theme => SwitchTheme(theme?.ToString()));
 
             _categories = new ObservableCollection<Category>(_dataService.GetAllCategories());
             _products = new ObservableCollection<Product>();
@@ -179,6 +179,8 @@ namespace Lab4._5.ViewModels
         public ICommand SortCommand { get; }
         public ICommand SwitchLanguageCommand { get; }
         public ICommand BuyProductCommand { get; }
+        public ICommand SwitchThemeCommand { get; }
+
         #endregion
 
         #region File Operations
@@ -448,6 +450,11 @@ namespace Lab4._5.ViewModels
         private bool CanShowDetails(object parameter)
         {
             return parameter is Product || SelectedProduct != null;
+        }
+        private void SwitchTheme(string themeName)
+        {
+            App.SwitchTheme(themeName);
+            StatusText = $"Тема изменена на: {themeName}";
         }
         private void SwitchLanguage(string lang)
         {

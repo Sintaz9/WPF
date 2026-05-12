@@ -11,7 +11,6 @@ namespace Lab4._5.Views
         public ProductEditWindow(Product product = null)
         {
             InitializeComponent();
-
             _viewModel = new ProductEditViewModel(product);
             DataContext = _viewModel;
         }

@@ -7,7 +7,8 @@
         MinHeight="500" MinWidth="600"
         WindowStartupLocation="CenterOwner"
         Cursor="/Resources/cursor.cur"
-        ResizeMode="CanResize">
+        ResizeMode="CanResize"
+        Background="{DynamicResource BackgroundColor}">
 
     <Window.Resources>
         <converters:RatingToStarsConverter x:Key="RatingToStarsConverter"/>
@@ -27,7 +28,7 @@
         </Grid.RowDefinitions>
 
         <!-- Заголовок -->
-        <Border Grid.Row="0" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" 
+        <Border Grid.Row="0" BorderBrush="{DynamicResource SurfaceBorderColor}" BorderThickness="0,0,0,1" 
                 Padding="0,0,0,10" Margin="0,0,0,10">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -39,15 +40,15 @@
                     <TextBlock Text="{Binding SelectedProduct.Name}" 
                                FontSize="24" FontWeight="Bold"/>
                     <TextBlock Text="{Binding SelectedProduct.FullName}" 
-                               FontSize="14" Foreground="#666" Margin="0,5,0,0"/>
+                               FontSize="14" Foreground="{DynamicResource TextSecondaryColor}" Margin="0,5,0,0"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Top">
                     <TextBlock FontSize="14" HorizontalAlignment="Right"
                                Text="{Binding SelectedProduct.Rating, StringFormat='{}{0:F1}'}"/>
                     <TextBlock Text="{Binding SelectedProduct.Rating, Converter={StaticResource RatingToStarsConverter}}" 
-                               FontSize="20" Foreground="#FFD700" HorizontalAlignment="Right"/>
-                    <TextBlock FontSize="12" Foreground="#666" HorizontalAlignment="Right" Margin="0,5,0,0"
+                               FontSize="20" Foreground="{DynamicResource StarColor}" HorizontalAlignment="Right"/>
+                    <TextBlock FontSize="12" Foreground="{DynamicResource TextSecondaryColor}" HorizontalAlignment="Right" Margin="0,5,0,0"
                                Text="{Binding SelectedProduct.SoldCount, StringFormat='{}{0}'}"/>
                 </StackPanel>
             </Grid>
@@ -77,7 +78,7 @@
 
                 <!-- Основная информация -->
                 <TextBlock Text="{DynamicResource MainInfo}" FontWeight="Bold" FontSize="14" 
-                           Foreground="#333" Margin="0,10,0,5"/>
+                           Foreground="{DynamicResource TextColor}" Margin="0,10,0,5"/>
 
                 <Grid Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>
@@ -119,27 +120,27 @@
 
                 <!-- Описание -->
                 <TextBlock Text="{DynamicResource Description}" FontWeight="Bold" FontSize="14" 
-                           Foreground="#333" Margin="0,10,0,5"/>
+                           Foreground="{DynamicResource TextColor}" Margin="0,10,0,5"/>
                 <TextBlock Text="{Binding SelectedProduct.Description}" 
                            TextWrapping="Wrap" Margin="0,0,0,10"/>
 
                 <!-- Цена и наличие -->
                 <TextBlock Text="{DynamicResource PriceAndStock}" FontWeight="Bold" FontSize="14" 
-                           Foreground="#333" Margin="0,10,0,5"/>
+                           Foreground="{DynamicResource TextColor}" Margin="0,10,0,5"/>
 
-                <Border Background="#F9F9F9" Padding="15" CornerRadius="5" Margin="0,0,0,10">
+                <Border Background="{DynamicResource BackgroundColor}" Padding="15" CornerRadius="5" Margin="0,0,0,10">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <TextBlock Text="{DynamicResource Price}" FontWeight="Bold" 
                                        VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBlock Text="{Binding SelectedProduct.FinalPrice, Converter={StaticResource PriceToStringConverter}}" 
-                                       FontSize="20" FontWeight="Bold" Foreground="#2E7D32"/>
+                                       FontSize="20" FontWeight="Bold" Foreground="{DynamicResource AccentColor}"/>
                             <TextBlock Text="{Binding SelectedProduct.Price, Converter={StaticResource PriceToStringConverter}}" 
                                        FontSize="16" Foreground="Gray" TextDecorations="Strikethrough" 
                                        VerticalAlignment="Center" Margin="10,0,0,0"
                                        Visibility="{Binding SelectedProduct.Discount, Converter={StaticResource DiscountToVisibilityConverter}}"/>
                             <TextBlock Text="{Binding SelectedProduct.Discount, StringFormat=' -{0}%'}" 
-                                       FontSize="14" Foreground="Red" FontWeight="Bold" 
+                                       FontSize="14" Foreground="{DynamicResource DangerColor}" FontWeight="Bold" 
                                        VerticalAlignment="Center" Margin="10,0,0,0"
                                        Visibility="{Binding SelectedProduct.Discount, Converter={StaticResource DiscountToVisibilityConverter}}"/>
                         </StackPanel>
@@ -172,7 +173,7 @@
 
                 <!-- Дополнительная информация -->
                 <TextBlock Text="{DynamicResource AdditionalInfo}" FontWeight="Bold" FontSize="14" 
-                           Foreground="#333" Margin="0,10,0,5"/>
+                           Foreground="{DynamicResource TextColor}" Margin="0,10,0,5"/>
 
                 <Grid Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>
