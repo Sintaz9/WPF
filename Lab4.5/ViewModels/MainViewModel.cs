@@ -86,6 +86,20 @@ namespace Lab4._5.ViewModels
                 _selectedProduct = value;
                 OnPropertyChanged();
                 CommandManager.InvalidateRequerySuggested();
+
+                // Лог в файл при выборе товара
+                if (_selectedProduct != null)
+                {
+                    try
+                    {
+                        string logDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+                        System.IO.Directory.CreateDirectory(logDir);
+                        string logFile = System.IO.Path.Combine(logDir, "product_log.txt");
+                        string logEntry = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Выбран товар: ID={_selectedProduct.Id}, Название={_selectedProduct.Name}, Количество={_selectedProduct.Quantity}, Цена={_selectedProduct.FinalPrice}\n";
+                        System.IO.File.AppendAllText(logFile, logEntry);
+                    }
+                    catch { /* тихо игнорируем ошибки записи */ }
+                }
             }
         }
         public string ProductsCountText

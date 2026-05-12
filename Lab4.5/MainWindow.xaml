@@ -18,15 +18,6 @@
         <converters:StockToColorConverter x:Key="StockToColorConverter"/>
         <converters:StockToTextConverter x:Key="StockToTextConverter"/>
         <converters:PriceToStringConverter x:Key="PriceToStringConverter"/>
-
-        <Style x:Key="ProductCardStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource SurfaceColor}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorderColor}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="10"/>
-        </Style>
     </Window.Resources>
 
     <Grid Margin="10">
@@ -150,7 +141,10 @@
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource ProductCardStyle}" Width="280">
+                        <Border x:Name="CardBorder" Width="280" Margin="5" Padding="10"
+                                CornerRadius="8" BorderThickness="2"
+                                Background="{DynamicResource SurfaceColor}"
+                                BorderBrush="{DynamicResource SurfaceBorderColor}">
                             <StackPanel>
                                 <Border Height="150" Margin="0,0,0,10" 
                                         Background="{DynamicResource BackgroundColor}" CornerRadius="5">
@@ -195,19 +189,59 @@
                                         Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"
                                         CommandParameter="{Binding}" Height="30" Margin="0,5,0,0" BorderThickness="0"/>
                                 <Button Content="{DynamicResource Buy}"
-                                    Background="{DynamicResource AccentColor}" 
-                                    Foreground="White"
-                                    Command="{Binding DataContext.BuyProductCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"
-                                    CommandParameter="{Binding}" 
-                                    Height="30" 
-                                    Margin="0,5,0,0"
-                                    BorderThickness="0"
-                                    Visibility="{Binding DataContext.IsAdminMode, 
-                                    Converter={StaticResource BooleanToVisibilityConverter}, 
-                                    ConverterParameter=invert,
-                                    RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"/>
+                                        Background="{DynamicResource AccentColor}" 
+                                        Foreground="White"
+                                        Command="{Binding DataContext.BuyProductCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"
+                                        CommandParameter="{Binding}" 
+                                        Height="30" Margin="0,5,0,0" BorderThickness="0"
+                                        Visibility="{Binding DataContext.IsAdminMode, 
+                                        Converter={StaticResource BooleanToVisibilityConverter}, 
+                                        ConverterParameter=invert,
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}">
+                                    <Button.Triggers>
+                                        <EventTrigger RoutedEvent="Button.MouseEnter">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                                     From="1.0" To="0.7" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="Button.MouseLeave">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                                     From="0.7" To="1.0" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Button.Triggers>
+                                </Button>
                             </StackPanel>
                         </Border>
+                        <DataTemplate.Triggers>
+                            <!-- DataTrigger: красная рамка при Quantity == 0 -->
+                            <DataTrigger Binding="{Binding Quantity}" Value="0">
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="Red"/>
+                                <Setter TargetName="CardBorder" Property="BorderThickness" Value="4"/>
+                            </DataTrigger>
+
+                            <!-- DataTrigger: жёлтая рамка при Quantity < 5 и > 0 -->
+                            <DataTrigger Binding="{Binding InStock}" Value="True">
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="Gold"/>
+                                <Setter TargetName="CardBorder" Property="BorderThickness" Value="3"/>
+                            </DataTrigger>
+
+                            <!-- MultiDataTrigger: зелёная рамка если InStock = True И Rating >= 4 -->
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding InStock}" Value="True"/>
+                                    <Condition Binding="{Binding Rating}" Value="4"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="LimeGreen"/>
+                                <Setter TargetName="CardBorder" Property="BorderThickness" Value="4"/>
+                            </MultiDataTrigger>
+                        </DataTemplate.Triggers>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

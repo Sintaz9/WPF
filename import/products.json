@@ -54,13 +54,13 @@
     "RelatedProductIds": [],
     "Rating": 4.9,
     "Price": 1670,
-    "Quantity": 7,
+    "Quantity": 5,
     "Color": "\u041A\u0440\u0430\u0441\u0438\u0432\u044B\u0439",
     "Size": "100\u0433",
     "Country": "\u0410\u043D\u0433\u043B\u0438\u044F",
     "Discount": 6,
     "InStock": true,
-    "SoldCount": 0,
+    "SoldCount": 2,
     "Manufacturer": "\u0411\u0435\u043B\u0430\u0440\u0443\u0441\u044C",
     "ImagePaths": [
       "C:\\Study\\Second_year\\OOP\\Spring\\labs\\Lab4.5\\image\\zeleniy-kitayskiy-chay-1763029576402.jpg"
