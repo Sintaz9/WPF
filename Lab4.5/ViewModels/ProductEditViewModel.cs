@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using Lab4._5.Models;
 
 namespace Lab4._5.ViewModels
@@ -61,7 +62,9 @@ namespace Lab4._5.ViewModels
         #region Properties
 
         public ObservableCollection<Category> Categories { get; set; }
-        public string WindowTitle => _isEditMode ? "Редактирование товара" : "Добавление нового товара";
+    public string WindowTitle => _isEditMode ?
+        Application.Current.TryFindResource("EditTitle") as string ?? "Редактирование товара" :
+        Application.Current.TryFindResource("AddTitle") as string ?? "Добавление нового товара";
 
         public string Name
         {

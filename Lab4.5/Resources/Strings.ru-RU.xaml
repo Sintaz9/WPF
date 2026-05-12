@@ -110,4 +110,15 @@
 
     <!-- Статус бар -->
     <system:String x:Key="ProductsCount">Товаров:</system:String>
+
+    <!-- Покупка -->
+    <system:String x:Key="Buy">Купить</system:String>
+    <system:String x:Key="BuySuccess">Товар куплен:</system:String>
+    <system:String x:Key="BuyOutOfStock">Товар закончился!</system:String>
+    <system:String x:Key="BuyError">Ошибка</system:String>
+    <system:String x:Key="BuyRemaining">Осталось:</system:String>
+
+    <!-- Продано -->
+    <system:String x:Key="Pieces">шт.</system:String>
+    
 </ResourceDictionary>

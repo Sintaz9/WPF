@@ -47,8 +47,9 @@ namespace Lab4._5.ViewModels
             ApplyFiltersCommand = new RelayCommand(_ => ApplyFilters());
             SortCommand = new RelayCommand(param => SortProducts(param?.ToString()));
             SwitchLanguageCommand = new RelayCommand(lang => SwitchLanguage(lang?.ToString()));
+            BuyProductCommand = new RelayCommand(BuyProduct, CanBuyProduct);
 
-            // Загружаем категории
+
             _categories = new ObservableCollection<Category>(_dataService.GetAllCategories());
             _products = new ObservableCollection<Product>();
 
@@ -177,6 +178,7 @@ namespace Lab4._5.ViewModels
         public ICommand ApplyFiltersCommand { get; }
         public ICommand SortCommand { get; }
         public ICommand SwitchLanguageCommand { get; }
+        public ICommand BuyProductCommand { get; }
         #endregion
 
         #region File Operations
@@ -271,7 +273,28 @@ namespace Lab4._5.ViewModels
                 StatusText = $"Товар '{editWindow.EditedProduct.Name}' обновлен (не сохранен в файл)";
             }
         }
+        private bool CanBuyProduct(object parameter)
+        {
+            return !IsAdminMode && SelectedProduct != null && SelectedProduct.InStock;
+        }
 
+        private void BuyProduct(object parameter)
+        {
+            var product = parameter as Product ?? SelectedProduct;
+            if (product == null) return;
+
+            if (product.Buy())
+            {
+                _dataService.UpdateProduct(product);
+                RefreshProductsList();
+                StatusText = $"Куплен товар '{product.Name}'. Осталось: {product.Quantity} шт.";
+            }
+            else
+            {
+                MessageBox.Show("Товар закончился!", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
         private void DeleteProduct()
         {
             if (SelectedProduct == null) return;
@@ -426,7 +449,6 @@ namespace Lab4._5.ViewModels
         {
             return parameter is Product || SelectedProduct != null;
         }
-        // В методе SwitchLanguage обновите:
         private void SwitchLanguage(string lang)
         {
             App.SwitchLanguage(lang);

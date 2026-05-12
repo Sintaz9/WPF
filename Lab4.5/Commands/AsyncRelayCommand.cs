@@ -4,10 +4,6 @@ using System.Windows.Input;
 
 namespace Lab4._5.Commands
 {
-    /// <summary>
-    /// Реализация ICommand для асинхронных операций (например, загрузка из файла)
-    /// Отличается от RelayCommand тем, что поддерживает async/await
-    /// </summary>
     public class AsyncRelayCommand : ICommand
     {
         private readonly Func<object, Task> _execute;

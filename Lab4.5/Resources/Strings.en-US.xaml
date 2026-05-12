@@ -110,4 +110,14 @@
 
     <!-- Status bar -->
     <system:String x:Key="ProductsCount">Products:</system:String>
+    
+    <!-- Purchase -->
+    <system:String x:Key="Buy">Buy</system:String>
+    <system:String x:Key="BuySuccess">Purchased:</system:String>
+    <system:String x:Key="BuyOutOfStock">Out of stock!</system:String>
+    <system:String x:Key="BuyError">Error</system:String>
+    <system:String x:Key="BuyRemaining">Remaining:</system:String>
+
+    <!-- Sold -->
+    <system:String x:Key="Pieces">pcs.</system:String>
 </ResourceDictionary>

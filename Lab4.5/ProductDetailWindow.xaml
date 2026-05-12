@@ -2,10 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:Lab4._5.Converters"
-        Title="Детали товара" 
+        Title="{DynamicResource ProductDetails}" 
         Height="600" Width="700"
         MinHeight="500" MinWidth="600"
         WindowStartupLocation="CenterOwner"
+        Cursor="/Resources/cursor.cur"
         ResizeMode="CanResize">
 
     <Window.Resources>
@@ -42,22 +43,12 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Top">
-                    <TextBlock FontSize="14" HorizontalAlignment="Right">
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="Рейтинг: {0:F1}">
-                                <Binding Path="SelectedProduct.Rating"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <TextBlock FontSize="14" HorizontalAlignment="Right"
+                               Text="{Binding SelectedProduct.Rating, StringFormat='{}{0:F1}'}"/>
                     <TextBlock Text="{Binding SelectedProduct.Rating, Converter={StaticResource RatingToStarsConverter}}" 
                                FontSize="20" Foreground="#FFD700" HorizontalAlignment="Right"/>
-                    <TextBlock FontSize="12" Foreground="#666" HorizontalAlignment="Right" Margin="0,5,0,0">
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="Куплено: {0} раз">
-                                <Binding Path="SelectedProduct.SoldCount"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="#666" HorizontalAlignment="Right" Margin="0,5,0,0"
+                               Text="{Binding SelectedProduct.SoldCount, StringFormat='{}{0}'}"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -85,7 +76,7 @@
                 </ScrollViewer>
 
                 <!-- Основная информация -->
-                <TextBlock Text="Основная информация" FontWeight="Bold" FontSize="14" 
+                <TextBlock Text="{DynamicResource MainInfo}" FontWeight="Bold" FontSize="14" 
                            Foreground="#333" Margin="0,10,0,5"/>
 
                 <Grid Margin="0,0,0,10">
@@ -100,25 +91,25 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Категория:" 
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource Category}" 
                                FontWeight="Bold" Margin="0,0,0,5"/>
                     <TextBlock Grid.Row="0" Grid.Column="1" 
                                Text="{Binding SelectedProduct.CategoryId, Converter={StaticResource CategoryIdToNameConverter}}" 
                                TextWrapping="Wrap" Margin="0,0,0,5"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Производитель:" 
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource Manufacturer}" 
                                FontWeight="Bold" Margin="0,0,0,5"/>
                     <TextBlock Grid.Row="1" Grid.Column="1" 
                                Text="{Binding SelectedProduct.Manufacturer}" 
                                TextWrapping="Wrap" Margin="0,0,0,5"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Страна:" 
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource Country}" 
                                FontWeight="Bold" Margin="0,0,0,5"/>
                     <TextBlock Grid.Row="2" Grid.Column="1" 
                                Text="{Binding SelectedProduct.Country}" 
                                TextWrapping="Wrap" Margin="0,0,0,5"/>
 
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Цвет/Размер:" 
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource ColorSize}" 
                                FontWeight="Bold" Margin="0,0,0,5"/>
                     <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
                         <TextBlock Text="{Binding SelectedProduct.Color}" Margin="0,0,5,0"/>
@@ -127,19 +118,19 @@
                 </Grid>
 
                 <!-- Описание -->
-                <TextBlock Text="Описание" FontWeight="Bold" FontSize="14" 
+                <TextBlock Text="{DynamicResource Description}" FontWeight="Bold" FontSize="14" 
                            Foreground="#333" Margin="0,10,0,5"/>
                 <TextBlock Text="{Binding SelectedProduct.Description}" 
                            TextWrapping="Wrap" Margin="0,0,0,10"/>
 
                 <!-- Цена и наличие -->
-                <TextBlock Text="Цена и наличие" FontWeight="Bold" FontSize="14" 
+                <TextBlock Text="{DynamicResource PriceAndStock}" FontWeight="Bold" FontSize="14" 
                            Foreground="#333" Margin="0,10,0,5"/>
 
                 <Border Background="#F9F9F9" Padding="15" CornerRadius="5" Margin="0,0,0,10">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                            <TextBlock Text="Цена: " FontWeight="Bold" 
+                            <TextBlock Text="{DynamicResource Price}" FontWeight="Bold" 
                                        VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBlock Text="{Binding SelectedProduct.FinalPrice, Converter={StaticResource PriceToStringConverter}}" 
                                        FontSize="20" FontWeight="Bold" Foreground="#2E7D32"/>
@@ -154,7 +145,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                            <TextBlock Text="Наличие: " FontWeight="Bold" 
+                            <TextBlock Text="{DynamicResource Stock}" FontWeight="Bold" 
                                        VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <Ellipse Width="12" Height="12" Margin="0,0,5,0" VerticalAlignment="Center">
                                 <Ellipse.Fill>
@@ -172,7 +163,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Количество на складе: " FontWeight="Bold" 
+                            <TextBlock Text="{DynamicResource Quantity}" FontWeight="Bold" 
                                        VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBlock Text="{Binding SelectedProduct.Quantity}"/>
                         </StackPanel>
@@ -180,7 +171,7 @@
                 </Border>
 
                 <!-- Дополнительная информация -->
-                <TextBlock Text="Дополнительная информация" FontWeight="Bold" FontSize="14" 
+                <TextBlock Text="{DynamicResource AdditionalInfo}" FontWeight="Bold" FontSize="14" 
                            Foreground="#333" Margin="0,10,0,5"/>
 
                 <Grid Margin="0,0,0,10">
@@ -193,33 +184,28 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="ID товара:" 
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource ProductId}" 
                                FontWeight="Bold" Margin="0,0,0,5"/>
                     <TextBlock Grid.Row="0" Grid.Column="1" 
                                Text="{Binding SelectedProduct.Id}"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Продано:" 
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource SoldCount}" 
                                FontWeight="Bold" Margin="0,0,0,5"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1">
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0} шт.">
-                                <Binding Path="SelectedProduct.SoldCount"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1"
+                               Text="{Binding SelectedProduct.SoldCount}"/>
                 </Grid>
             </StackPanel>
         </ScrollViewer>
 
         <!-- Кнопки -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Редактировать" Width="100" Height="30" Margin="0,0,10,0"
+            <Button Content="{DynamicResource BtnEdit}" Width="100" Height="30" Margin="0,0,10,0"
                     Visibility="{Binding IsAdminMode, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Click="EditButton_Click"/>
-            <Button Content="Удалить" Width="100" Height="30" Margin="0,0,10,0"
+            <Button Content="{DynamicResource BtnDelete}" Width="100" Height="30" Margin="0,0,10,0"
                     Visibility="{Binding IsAdminMode, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Click="DeleteButton_Click"/>
-            <Button Content="Закрыть" Width="100" Height="30" IsCancel="True" Click="CloseButton_Click"/>
+            <Button Content="{DynamicResource BtnClose}" Width="100" Height="30" IsCancel="True" Click="CloseButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>

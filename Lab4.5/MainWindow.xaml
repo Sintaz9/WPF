@@ -180,6 +180,18 @@
                                 <Button Content="{DynamicResource BtnDetails}" Background="#E63946" Foreground="White"
                                         Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"
                                         CommandParameter="{Binding}" Height="30" Margin="0,5,0,0" BorderThickness="0"/>
+                                <Button Content="{DynamicResource Buy}"
+                                    Background="#4CAF50" 
+                                    Foreground="White"
+                                    Command="{Binding DataContext.BuyProductCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"
+                                    CommandParameter="{Binding}" 
+                                    Height="30" 
+                                    Margin="0,5,0,0"
+                                    BorderThickness="0"
+                                    Visibility="{Binding DataContext.IsAdminMode, 
+                                    Converter={StaticResource BooleanToVisibilityConverter}, 
+                                    ConverterParameter=invert,
+                                    RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>

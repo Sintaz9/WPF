@@ -2,10 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:Lab4._5.Converters"
-        Title="Редактирование товара" 
+        Title="{DynamicResource EditTitle}" 
         Height="700" Width="600"
         MinHeight="600" MinWidth="500"
         WindowStartupLocation="CenterOwner"
+        Cursor="/Resources/cursor.cur"
         ResizeMode="CanResize">
 
     <Window.Resources>
@@ -43,87 +44,87 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <!-- Краткое название -->
-                <TextBlock Text="Краткое название *" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource Name}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource FormTextBoxStyle}"/>
                 <TextBlock Text="{Binding NameError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasNameError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <!-- Полное название -->
-                <TextBlock Text="Полное название *" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource FullName}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource FormTextBoxStyle}"/>
                 <TextBlock Text="{Binding FullNameError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasFullNameError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <!-- Категория -->
-                <TextBlock Text="Категория *" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource CategoryLabel}" Style="{StaticResource FormLabelStyle}"/>
                 <ComboBox ItemsSource="{Binding Categories}" 
                           SelectedItem="{Binding SelectedCategory}"
                           DisplayMemberPath="Name"
                           Height="25"/>
 
                 <!-- Цена -->
-                <TextBlock Text="Цена (₽) *" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource PriceLabel}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding PriceText, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource FormTextBoxStyle}"/>
                 <TextBlock Text="{Binding PriceError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasPriceError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <!-- Скидка -->
-                <TextBlock Text="Скидка (%)" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource Discount}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding DiscountText, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource FormTextBoxStyle}"/>
                 <TextBlock Text="{Binding DiscountError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasDiscountError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <!-- Количество -->
-                <TextBlock Text="Количество на складе *" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource QuantityLabel}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding QuantityText, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource FormTextBoxStyle}"/>
                 <TextBlock Text="{Binding QuantityError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasQuantityError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <!-- Страна -->
-                <TextBlock Text="Страна происхождения" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource CountryLabel}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding Country, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource FormTextBoxStyle}"/>
 
                 <!-- Цвет -->
-                <TextBlock Text="Цвет упаковки" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource ColorLabel}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource FormTextBoxStyle}"/>
 
                 <!-- Размер -->
-                <TextBlock Text="Размер/Вес" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource SizeLabel}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource FormTextBoxStyle}"/>
 
                 <!-- Производитель -->
-                <TextBlock Text="Производитель" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource ManufacturerLabel}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding Manufacturer, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource FormTextBoxStyle}"/>
 
                 <!-- Описание -->
-                <TextBlock Text="Описание *" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource DescriptionLabel}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
                          Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
                 <TextBlock Text="{Binding DescriptionError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasDescriptionError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <!-- Рейтинг -->
-                <TextBlock Text="Рейтинг (0-5)" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource RatingLabel}" Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Text="{Binding RatingText, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource FormTextBoxStyle}"/>
                 <TextBlock Text="{Binding RatingError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasRatingError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <!-- Изображения -->
-                <TextBlock Text="Изображения товара" Style="{StaticResource FormLabelStyle}"/>
+                <TextBlock Text="{DynamicResource ImagesLabel}" Style="{StaticResource FormLabelStyle}"/>
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                    <Button Content="Добавить изображение" Click="AddImage_Click" 
+                    <Button Content="{DynamicResource BtnAddImage}" Click="AddImage_Click" 
                             Width="150" Height="25" Margin="0,0,10,0"/>
-                    <Button Content="Удалить выбранное" Click="RemoveImage_Click" 
+                    <Button Content="{DynamicResource BtnRemoveImage}" Click="RemoveImage_Click" 
                             Width="150" Height="25"/>
                 </StackPanel>
 
@@ -145,15 +146,15 @@
                        Stretch="Uniform"
                        Visibility="Collapsed"/>
 
-                <TextBlock Text="* - обязательные поля" FontSize="11" Foreground="#666" Margin="0,10,0,0"/>
+                <TextBlock Text="{DynamicResource RequiredFields}" FontSize="11" Foreground="#666" Margin="0,10,0,0"/>
             </StackPanel>
         </ScrollViewer>
 
         <!-- Кнопки -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Сохранить" Width="100" Height="30" Margin="0,0,10,0"
+            <Button Content="{DynamicResource BtnSave}" Width="100" Height="30" Margin="0,0,10,0"
                     Click="SaveButton_Click"/>
-            <Button Content="Отмена" Width="100" Height="30" IsCancel="True" Click="CancelButton_Click"/>
+            <Button Content="{DynamicResource BtnClose}" Width="100" Height="30" IsCancel="True" Click="CancelButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>

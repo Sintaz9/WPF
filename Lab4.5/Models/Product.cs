@@ -143,7 +143,16 @@ namespace Lab4._5.Models
         public decimal FinalPrice => Price - (Price * (decimal)(Discount / 100));
 
         public event PropertyChangedEventHandler PropertyChanged;
-
+        public bool Buy(int count = 1)
+        {
+            if (Quantity >= count)
+            {
+                Quantity -= count;
+                SoldCount += count;
+                return true;
+            }
+            return false;
+        }
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
