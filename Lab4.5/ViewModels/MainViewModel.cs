@@ -30,7 +30,6 @@ namespace Lab4._5.ViewModels
         private string _productsCountText = "Товаров";
         private string _sortDirection;
 
-        // Undo/Redo stacks
         private Stack<UndoRedoAction> _undoStack = new Stack<UndoRedoAction>();
         private Stack<UndoRedoAction> _redoStack = new Stack<UndoRedoAction>();
 

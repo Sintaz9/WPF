@@ -5,9 +5,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- Тема по умолчанию -->
                 <ResourceDictionary Source="Themes/LightGreenTheme.xaml"/>
-                <!-- Язык по умолчанию -->
                 <ResourceDictionary Source="Resources/Strings.ru-RU.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

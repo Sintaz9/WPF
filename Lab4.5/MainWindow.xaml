@@ -33,10 +33,10 @@
                     <ControlTemplate TargetType="Button">
                         <Grid>
                             <Border x:Name="CircleBorder"
-                Background="{TemplateBinding Background}" 
-                CornerRadius="20"
-                Width="40" Height="40"
-                RenderTransformOrigin="0.5,0.5">
+                                    Background="{TemplateBinding Background}" 
+                                    CornerRadius="20"
+                                    Width="40" Height="40"
+                                    RenderTransformOrigin="0.5,0.5">        
                                 <Border.RenderTransform>
                                     <ScaleTransform x:Name="scale" ScaleX="1" ScaleY="1"/>
                                 </Border.RenderTransform>

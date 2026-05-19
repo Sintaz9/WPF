@@ -53,7 +53,6 @@ namespace Lab4._5.Controls
                         RenderTransform = new ScaleTransform(1, 1)
                     };
 
-                    // Анимация при наведении (работает даже в режиме ReadOnly)
                     star.MouseEnter += Star_MouseEnter;
                     star.MouseLeave += Star_MouseLeave;
                     star.MouseDown += Star_MouseDown;
