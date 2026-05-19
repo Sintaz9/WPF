@@ -49,13 +49,15 @@ namespace Lab4._5.Services
             }
         }
 
-        public void DeleteProduct(int id)
+        public bool DeleteProduct(int id)
         {
             var product = _products.FirstOrDefault(p => p.Id == id);
             if (product != null)
             {
                 _products.Remove(product);
+                return true;
             }
+            return false;
         }
 
         // Сохранить в файл

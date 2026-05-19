@@ -7,6 +7,7 @@ namespace Lab4._5.Views
     {
         public Product SelectedProduct { get; set; }
         public bool IsAdminMode { get; set; }
+        public bool ShouldDelete { get; private set; }
 
         public ProductDetailWindow(Product product, bool isAdminMode)
         {
@@ -42,11 +43,11 @@ namespace Lab4._5.Views
 
             if (result == MessageBoxResult.Yes)
             {
+                ShouldDelete = true;
                 DialogResult = true;
                 Close();
             }
         }
-
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;

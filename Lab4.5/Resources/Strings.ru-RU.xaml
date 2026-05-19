@@ -120,5 +120,15 @@
 
     <!-- Продано -->
     <system:String x:Key="Pieces">шт.</system:String>
+
+    <system:String x:Key="Account">Личный кабинет</system:String>
+    <system:String x:Key="Username">Логин:</system:String>
+    <system:String x:Key="Email">Email:</system:String>
+    <system:String x:Key="SaveChanges">Сохранить изменения</system:String>
+
+    <system:String x:Key="About">О себе</system:String>
+
+    <system:String x:Key="Undo">Отмена</system:String>
+    <system:String x:Key="Redo">Повтор</system:String>
     
 </ResourceDictionary>

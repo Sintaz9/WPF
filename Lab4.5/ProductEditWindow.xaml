@@ -36,111 +36,80 @@
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <TextBlock Text="{DynamicResource Name}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Название -->
+                <TextBlock Text="{DynamicResource Name}"/>
                 <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="25" VerticalContentAlignment="Center"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="25" VerticalContentAlignment="Center"/>
                 <TextBlock Text="{Binding NameError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasNameError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Text="{DynamicResource FullName}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Полное название -->
+                <TextBlock Text="{DynamicResource FullName}"/>
                 <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="25" VerticalContentAlignment="Center"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="25" VerticalContentAlignment="Center"/>
                 <TextBlock Text="{Binding FullNameError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasFullNameError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Text="{DynamicResource CategoryLabel}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Категория -->
+                <TextBlock Text="{DynamicResource CategoryLabel}"/>
                 <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"
                           DisplayMemberPath="Name" Height="25"/>
 
-                <TextBlock Text="{DynamicResource PriceLabel}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Цена -->
+                <TextBlock Text="{DynamicResource PriceLabel}"/>
                 <TextBox Text="{Binding PriceText, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="25" VerticalContentAlignment="Center"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="25" VerticalContentAlignment="Center"/>
                 <TextBlock Text="{Binding PriceError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasPriceError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Text="{DynamicResource Discount}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Скидка -->
+                <TextBlock Text="{DynamicResource Discount}"/>
                 <TextBox Text="{Binding DiscountText, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="25" VerticalContentAlignment="Center"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="25" VerticalContentAlignment="Center"/>
                 <TextBlock Text="{Binding DiscountError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasDiscountError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Text="{DynamicResource QuantityLabel}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Количество -->
+                <TextBlock Text="{DynamicResource QuantityLabel}"/>
                 <TextBox Text="{Binding QuantityText, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="25" VerticalContentAlignment="Center"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="25" VerticalContentAlignment="Center"/>
                 <TextBlock Text="{Binding QuantityError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasQuantityError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Text="{DynamicResource CountryLabel}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Страна -->
+                <TextBlock Text="{DynamicResource CountryLabel}"/>
                 <TextBox Text="{Binding Country, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="25" VerticalContentAlignment="Center"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="25" VerticalContentAlignment="Center"/>
 
-                <TextBlock Text="{DynamicResource ColorLabel}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Цвет -->
+                <TextBlock Text="{DynamicResource ColorLabel}"/>
                 <TextBox Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="25" VerticalContentAlignment="Center"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="25" VerticalContentAlignment="Center"/>
 
-                <TextBlock Text="{DynamicResource SizeLabel}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Размер -->
+                <TextBlock Text="{DynamicResource SizeLabel}"/>
                 <TextBox Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="25" VerticalContentAlignment="Center"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="25" VerticalContentAlignment="Center"/>
 
-                <TextBlock Text="{DynamicResource ManufacturerLabel}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Производитель -->
+                <TextBlock Text="{DynamicResource ManufacturerLabel}"/>
                 <TextBox Text="{Binding Manufacturer, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="25" VerticalContentAlignment="Center"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="25" VerticalContentAlignment="Center"/>
 
-                <TextBlock Text="{DynamicResource DescriptionLabel}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Описание -->
+                <TextBlock Text="{DynamicResource DescriptionLabel}"/>
                 <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"/>
 
-                <TextBlock Text="{DynamicResource RatingLabel}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Рейтинг -->
+                <TextBlock Text="{DynamicResource RatingLabel}"/>
                 <TextBox Text="{Binding RatingText, UpdateSourceTrigger=PropertyChanged}" 
-                         Height="25" VerticalContentAlignment="Center"
-                         Background="{DynamicResource SurfaceColor}" 
-                         Foreground="{DynamicResource TextColor}" 
-                         BorderBrush="{DynamicResource SurfaceBorderColor}"
-                         CaretBrush="{DynamicResource TextColor}"/>
+                         Height="25" VerticalContentAlignment="Center"/>
                 <TextBlock Text="{Binding RatingError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasRatingError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Text="{DynamicResource ImagesLabel}" Style="{StaticResource FormLabelStyle}"/>
+                <!-- Изображения -->
+                <TextBlock Text="{DynamicResource ImagesLabel}"/>
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                     <Button Content="{DynamicResource BtnAddImage}" Click="AddImage_Click" 
                             Width="150" Height="25" Margin="0,0,10,0"/>
@@ -150,8 +119,7 @@
 
                 <ListBox ItemsSource="{Binding ImagePaths}" SelectedItem="{Binding SelectedImagePath}"
                          Height="80" Margin="0,5,0,10"
-                         BorderBrush="{DynamicResource SurfaceBorderColor}" BorderThickness="1"
-                         Background="{DynamicResource SurfaceColor}" Foreground="{DynamicResource TextColor}">
+                         BorderBrush="{DynamicResource SurfaceBorderColor}" BorderThickness="1">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" FontSize="11" Margin="2" TextTrimming="CharacterEllipsis"/>
@@ -161,8 +129,7 @@
 
                 <Image x:Name="PreviewImage" Height="150" Margin="0,0,0,10" Stretch="Uniform" Visibility="Collapsed"/>
 
-                <TextBlock Text="{DynamicResource RequiredFields}" FontSize="11" 
-                           Foreground="{DynamicResource TextSecondaryColor}" Margin="0,10,0,0"/>
+                <TextBlock Text="{DynamicResource RequiredFields}" FontSize="11" Margin="0,10,0,0"/>
             </StackPanel>
         </ScrollViewer>
 

@@ -120,4 +120,15 @@
 
     <!-- Sold -->
     <system:String x:Key="Pieces">pcs.</system:String>
+
+    <system:String x:Key="Account">Account</system:String>
+    <system:String x:Key="Username">Username:</system:String>
+    <system:String x:Key="Email">Email:</system:String>
+    <system:String x:Key="SaveChanges">Save changes</system:String>
+
+    <system:String x:Key="About">About me</system:String>
+
+    <system:String x:Key="Undo">Undo</system:String>
+    <system:String x:Key="Redo">Redo</system:String>
+    
 </ResourceDictionary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -27,8 +28,12 @@ namespace Lab4._5.ViewModels
         private string _ratingFilterText;
         private string _sortBy;
         private string _productsCountText = "Товаров";
-
         private string _sortDirection;
+
+        // Undo/Redo stacks
+        private Stack<UndoRedoAction> _undoStack = new Stack<UndoRedoAction>();
+        private Stack<UndoRedoAction> _redoStack = new Stack<UndoRedoAction>();
+
         public MainViewModel()
         {
             _dataService = new DataService();
@@ -49,6 +54,9 @@ namespace Lab4._5.ViewModels
             SwitchLanguageCommand = new RelayCommand(lang => SwitchLanguage(lang?.ToString()));
             BuyProductCommand = new RelayCommand(BuyProduct, CanBuyProduct);
             SwitchThemeCommand = new RelayCommand(theme => SwitchTheme(theme?.ToString()));
+            OpenAccountCommand = new RelayCommand(_ => OpenAccount());
+            UndoCommand = new RelayCommand(_ => Undo(), _ => _undoStack.Count > 0);
+            RedoCommand = new RelayCommand(_ => Redo(), _ => _redoStack.Count > 0);
 
             _categories = new ObservableCollection<Category>(_dataService.GetAllCategories());
             _products = new ObservableCollection<Product>();
@@ -102,11 +110,13 @@ namespace Lab4._5.ViewModels
                 }
             }
         }
+
         public string ProductsCountText
         {
             get => _productsCountText;
             set { _productsCountText = value; OnPropertyChanged(); }
         }
+
         public Category SelectedCategory
         {
             get => _selectedCategory;
@@ -174,7 +184,6 @@ namespace Lab4._5.ViewModels
             set { _sortDirection = value; OnPropertyChanged(); }
         }
 
-
         #endregion
 
         #region Commands
@@ -194,6 +203,44 @@ namespace Lab4._5.ViewModels
         public ICommand SwitchLanguageCommand { get; }
         public ICommand BuyProductCommand { get; }
         public ICommand SwitchThemeCommand { get; }
+        public ICommand OpenAccountCommand { get; }
+        public ICommand UndoCommand { get; }
+        public ICommand RedoCommand { get; }
+
+        #endregion
+
+        #region Undo/Redo
+
+        public class UndoRedoAction
+        {
+            public string Description { get; set; }
+            public Action Undo { get; set; }
+            public Action Redo { get; set; }
+        }
+
+        private void Undo()
+        {
+            if (_undoStack.Count > 0)
+            {
+                var action = _undoStack.Pop();
+                action.Undo.Invoke();
+                _redoStack.Push(action);
+                StatusText = $"↩ Отмена: {action.Description}";
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
+
+        private void Redo()
+        {
+            if (_redoStack.Count > 0)
+            {
+                var action = _redoStack.Pop();
+                action.Redo.Invoke();
+                _undoStack.Push(action);
+                StatusText = $"↪ Повтор: {action.Description}";
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
 
         #endregion
 
@@ -269,9 +316,20 @@ namespace Lab4._5.ViewModels
 
             if (editWindow.ShowDialog() == true && editWindow.EditedProduct != null)
             {
-                _dataService.AddProduct(editWindow.EditedProduct);
+                var product = editWindow.EditedProduct;
+                _dataService.AddProduct(product);
                 RefreshProductsList();
-                StatusText = $"Товар '{editWindow.EditedProduct.Name}' добавлен (не сохранен в файл)";
+
+                // Добавляем действие в Undo стек
+                _undoStack.Push(new UndoRedoAction
+                {
+                    Description = $"Добавление '{product.Name}'",
+                    Undo = () => { _dataService.DeleteProduct(product.Id); RefreshProductsList(); },
+                    Redo = () => { _dataService.AddProduct(product); RefreshProductsList(); }
+                });
+                _redoStack.Clear();
+
+                StatusText = $"Товар '{product.Name}' добавлен (не сохранен в файл)";
             }
         }
 
@@ -279,16 +337,50 @@ namespace Lab4._5.ViewModels
         {
             if (SelectedProduct == null) return;
 
+            var originalProduct = new Product
+            {
+                Id = SelectedProduct.Id,
+                Name = SelectedProduct.Name,
+                FullName = SelectedProduct.FullName,
+                Description = SelectedProduct.Description,
+                CategoryId = SelectedProduct.CategoryId,
+                Manufacturer = SelectedProduct.Manufacturer,
+                Country = SelectedProduct.Country,
+                Color = SelectedProduct.Color,
+                Size = SelectedProduct.Size,
+                Price = SelectedProduct.Price,
+                Discount = SelectedProduct.Discount,
+                Quantity = SelectedProduct.Quantity,
+                InStock = SelectedProduct.InStock,
+                Rating = SelectedProduct.Rating,
+                SoldCount = SelectedProduct.SoldCount,
+                ImagePaths = SelectedProduct.ImagePaths != null
+                    ? new ObservableCollection<string>(SelectedProduct.ImagePaths)
+                    : new ObservableCollection<string>()
+            };
+
             var editWindow = new ProductEditWindow(SelectedProduct);
             editWindow.Owner = Application.Current.MainWindow;
 
             if (editWindow.ShowDialog() == true && editWindow.EditedProduct != null)
             {
-                _dataService.UpdateProduct(editWindow.EditedProduct);
+                var editedProduct = editWindow.EditedProduct;
+                _dataService.UpdateProduct(editedProduct);
                 RefreshProductsList();
-                StatusText = $"Товар '{editWindow.EditedProduct.Name}' обновлен (не сохранен в файл)";
+
+                // Добавляем действие в Undo стек
+                _undoStack.Push(new UndoRedoAction
+                {
+                    Description = $"Редактирование '{editedProduct.Name}'",
+                    Undo = () => { _dataService.UpdateProduct(originalProduct); RefreshProductsList(); },
+                    Redo = () => { _dataService.UpdateProduct(editedProduct); RefreshProductsList(); }
+                });
+                _redoStack.Clear();
+
+                StatusText = $"Товар '{editedProduct.Name}' обновлен (не сохранен в файл)";
             }
         }
+
         private bool CanBuyProduct(object parameter)
         {
             return !IsAdminMode && SelectedProduct != null && SelectedProduct.InStock;
@@ -299,10 +391,37 @@ namespace Lab4._5.ViewModels
             var product = parameter as Product ?? SelectedProduct;
             if (product == null) return;
 
+            int oldQuantity = product.Quantity;
+            bool oldInStock = product.InStock;
+            int oldSoldCount = product.SoldCount;
+
             if (product.Buy())
             {
                 _dataService.UpdateProduct(product);
                 RefreshProductsList();
+
+                // Добавляем действие в Undo стек
+                var boughtProduct = product;
+                _undoStack.Push(new UndoRedoAction
+                {
+                    Description = $"Покупка '{boughtProduct.Name}'",
+                    Undo = () =>
+                    {
+                        boughtProduct.Quantity = oldQuantity;
+                        boughtProduct.InStock = oldInStock;
+                        boughtProduct.SoldCount = oldSoldCount;
+                        _dataService.UpdateProduct(boughtProduct);
+                        RefreshProductsList();
+                    },
+                    Redo = () =>
+                    {
+                        boughtProduct.Buy();
+                        _dataService.UpdateProduct(boughtProduct);
+                        RefreshProductsList();
+                    }
+                });
+                _redoStack.Clear();
+
                 StatusText = $"Куплен товар '{product.Name}'. Осталось: {product.Quantity} шт.";
             }
             else
@@ -311,6 +430,7 @@ namespace Lab4._5.ViewModels
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
         private void DeleteProduct()
         {
             if (SelectedProduct == null) return;
@@ -320,9 +440,50 @@ namespace Lab4._5.ViewModels
 
             if (result == MessageBoxResult.Yes)
             {
-                _dataService.DeleteProduct(SelectedProduct.Id);
-                RefreshProductsList();
-                StatusText = $"Товар удален (изменения не сохранены в файл)";
+                var deletedProduct = SelectedProduct;
+                int deletedId = deletedProduct.Id;
+
+                // Удаляем из сервиса
+                bool deleted = _dataService.DeleteProduct(deletedId);
+
+                // Очищаем выбранный товар
+                SelectedProduct = null;
+
+                // Обновляем список
+                var updatedList = _dataService.GetAllProducts();
+                Products = new ObservableCollection<Product>(updatedList);
+
+                if (deleted)
+                {
+                    // Добавляем действие в Undo стек
+                    _undoStack.Push(new UndoRedoAction
+                    {
+                        Description = $"Удаление '{deletedProduct.Name}'",
+                        Undo = () =>
+                        {
+                            _dataService.AddProduct(deletedProduct);
+                            Products = new ObservableCollection<Product>(_dataService.GetAllProducts());
+                        },
+                        Redo = () =>
+                        {
+                            _dataService.DeleteProduct(deletedId);
+                            Products = new ObservableCollection<Product>(_dataService.GetAllProducts());
+                        }
+                    });
+                    _redoStack.Clear();
+
+                    StatusText = $"Товар '{deletedProduct.Name}' удален (изменения не сохранены в файл)";
+
+                    // Показываем сообщение для отладки
+                    MessageBox.Show($"Товар удалён. Осталось товаров: {Products.Count}",
+                        "Отладка", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    StatusText = $"Ошибка при удалении товара '{deletedProduct.Name}'";
+                    MessageBox.Show("Не удалось удалить товар из коллекции!",
+                        "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
@@ -465,11 +626,13 @@ namespace Lab4._5.ViewModels
         {
             return parameter is Product || SelectedProduct != null;
         }
+
         private void SwitchTheme(string themeName)
         {
             App.SwitchTheme(themeName);
             StatusText = $"Тема изменена на: {themeName}";
         }
+
         private void SwitchLanguage(string lang)
         {
             App.SwitchLanguage(lang);
@@ -478,6 +641,7 @@ namespace Lab4._5.ViewModels
             ProductsCountText = lang == "ru-RU" ? "Товаров:" : "Products:";
             StatusText = lang == "ru-RU" ? "Язык: Русский" : "Language: English";
         }
+
         private void ShowDetails(object parameter)
         {
             Product productToShow = parameter as Product ?? SelectedProduct;
@@ -485,13 +649,52 @@ namespace Lab4._5.ViewModels
             if (productToShow != null)
             {
                 var detailsWindow = new ProductDetailWindow(productToShow, IsAdminMode);
+                detailsWindow.Owner = Application.Current.MainWindow;
                 detailsWindow.ShowDialog();
 
-                if (detailsWindow.DialogResult == true)
+                if (detailsWindow.ShouldDelete)
                 {
+                    // Удаляем товар через главный DataService
+                    var deletedProduct = productToShow;
+                    int deletedId = deletedProduct.Id;
+
+                    _dataService.DeleteProduct(deletedId);
+                    SelectedProduct = null;
+                    RefreshProductsList();
+
+                    // Добавляем в Undo стек
+                    _undoStack.Push(new UndoRedoAction
+                    {
+                        Description = $"Удаление '{deletedProduct.Name}'",
+                        Undo = () =>
+                        {
+                            _dataService.AddProduct(deletedProduct);
+                            RefreshProductsList();
+                        },
+                        Redo = () =>
+                        {
+                            _dataService.DeleteProduct(deletedId);
+                            RefreshProductsList();
+                        }
+                    });
+                    _redoStack.Clear();
+
+                    StatusText = $"Товар '{deletedProduct.Name}' удалён";
+                }
+                else if (detailsWindow.DialogResult == true)
+                {
+                    // Товар был отредактирован
                     RefreshProductsList();
                 }
             }
+        }
+
+        private void OpenAccount()
+        {
+            string role = IsAdminMode ? "Admin" : "Client";
+            var accountWindow = new AccountWindow(role);
+            accountWindow.Owner = Application.Current.MainWindow;
+            accountWindow.ShowDialog();
         }
 
         #endregion
