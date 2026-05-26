@@ -36,6 +36,7 @@ namespace Lab4._5.ViewModels
         public MainViewModel()
         {
             _dataService = new DataService();
+            _dataService.UseDatabase = true;
 
             // Инициализация команд
             LoadDataCommand = new RelayCommand(_ => LoadFromFile());
@@ -56,6 +57,8 @@ namespace Lab4._5.ViewModels
             OpenAccountCommand = new RelayCommand(_ => OpenAccount());
             UndoCommand = new RelayCommand(_ => Undo(), _ => _undoStack.Count > 0);
             RedoCommand = new RelayCommand(_ => Redo(), _ => _redoStack.Count > 0);
+            SwitchDataSourceCommand = new RelayCommand(param => SwitchDataSource(param?.ToString()));
+            OpenAdminWindowCommand = new RelayCommand(_ => OpenAdminWindow(), _ => IsAdminMode);
 
             _categories = new ObservableCollection<Category>(_dataService.GetAllCategories());
             _products = new ObservableCollection<Product>();
@@ -205,6 +208,9 @@ namespace Lab4._5.ViewModels
         public ICommand OpenAccountCommand { get; }
         public ICommand UndoCommand { get; }
         public ICommand RedoCommand { get; }
+        public ICommand SwitchDataSourceCommand { get; }
+        public ICommand OpenAdminWindowCommand { get; }
+
 
         #endregion
 
@@ -243,7 +249,24 @@ namespace Lab4._5.ViewModels
 
         #endregion
 
+
+
         #region File Operations
+
+        private void OpenAdminWindow()
+        {
+            var adminWindow = new AdminWindow();
+            adminWindow.Owner = Application.Current.MainWindow;
+            adminWindow.ShowDialog();
+        }
+
+        private void SwitchDataSource(string source)
+        {
+            bool useDb = source == "db";
+            _dataService.UseDatabase = useDb;
+            RefreshProductsList();
+            StatusText = useDb ? "Режим: База данных" : "Режим: JSON файл";
+        }
 
         private void LoadFromFile()
         {
