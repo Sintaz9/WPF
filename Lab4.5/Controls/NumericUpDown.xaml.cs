@@ -6,7 +6,6 @@ namespace Lab4._5.Controls
 {
     public partial class NumericUpDown : UserControl
     {
-        // DependencyProperty для значения с валидацией и коррекцией
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register(
                 "Value",
@@ -140,10 +139,6 @@ namespace Lab4._5.Controls
             int oldValue = (int)e.OldValue;
             int newValue = (int)e.NewValue;
 
-            // Вызываем Tunneling событие (сначала)
-            var previewArgs = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue, PreviewValueChangedEvent);
-            control.RaiseEvent(previewArgs);
-
             // Вызываем Bubbling событие
             var bubbleArgs = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue, ValueChangedEvent);
             control.RaiseEvent(bubbleArgs);
@@ -158,26 +153,54 @@ namespace Lab4._5.Controls
 
         private void UpButton_Click(object sender, RoutedEventArgs e)
         {
+            int oldValue = Value;
             int newValue = Value + Step;
+
+            // TUNNELING
+            var previewArgs = new RoutedPropertyChangedEventArgs<int>(
+                oldValue,
+                newValue,
+                PreviewValueChangedEvent);
+
+            RaiseEvent(previewArgs);
+
+            // Если событие отменено
+            if (previewArgs.Handled)
+                return;
+
             if (newValue <= MaxValue)
+            {
                 Value = newValue;
+            }
             else
             {
-                Value = MaxValue;
-                // Direct событие — значение отклонено
                 RaiseEvent(new RoutedEventArgs(ValueRejectedEvent, this));
             }
         }
 
         private void DownButton_Click(object sender, RoutedEventArgs e)
         {
+            int oldValue = Value;
             int newValue = Value - Step;
+
+            // TUNNELING
+            var previewArgs = new RoutedPropertyChangedEventArgs<int>(
+                oldValue,
+                newValue,
+                PreviewValueChangedEvent);
+
+            RaiseEvent(previewArgs);
+
+            // Если событие отменено
+            if (previewArgs.Handled)
+                return;
+
             if (newValue >= MinValue)
+            {
                 Value = newValue;
+            }
             else
             {
-                Value = MinValue;
-                // Direct событие — значение отклонено
                 RaiseEvent(new RoutedEventArgs(ValueRejectedEvent, this));
             }
         }

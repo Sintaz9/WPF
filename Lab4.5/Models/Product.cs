@@ -21,6 +21,18 @@ namespace Lab4._5.Models
         private bool _inStock;
         private int _soldCount;
         private string _manufacturer;
+        private int _buyCount = 1;
+
+        public int BuyCount
+        {
+            get => _buyCount;
+            set
+            {
+                _buyCount = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ObservableCollection<string> _imagePaths;
 
         public Product()
@@ -75,7 +87,14 @@ namespace Lab4._5.Models
         public int Quantity
         {
             get => _quantity;
-            set { _quantity = value; OnPropertyChanged(); OnPropertyChanged(nameof(InStock)); }
+            set { 
+                _quantity = value; 
+                if (BuyCount > _quantity)
+                    {
+                        BuyCount = _quantity > 0 ? _quantity : 1;
+                    }
+                OnPropertyChanged(); OnPropertyChanged(nameof(InStock)); 
+                }
         }
 
         public string Color

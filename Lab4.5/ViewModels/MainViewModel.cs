@@ -394,7 +394,7 @@ namespace Lab4._5.ViewModels
             bool oldInStock = product.InStock;
             int oldSoldCount = product.SoldCount;
 
-            if (product.Buy())
+            if (product.Buy(product.BuyCount))
             {
                 _dataService.UpdateProduct(product);
                 RefreshProductsList();
@@ -421,7 +421,7 @@ namespace Lab4._5.ViewModels
                 });
                 _redoStack.Clear();
 
-                StatusText = $"Куплен товар '{product.Name}'. Осталось: {product.Quantity} шт.";
+                StatusText = $"Куплено: {product.BuyCount} шт. товара '{product.Name}'. Осталось: {product.Quantity} шт.";
             }
             else
             {

@@ -1,6 +1,8 @@
-﻿using System.Windows;
-using Lab4._5.Controls;
+﻿using Lab4._5.Controls;
+using Lab4._5.Models;
 using Lab4._5.ViewModels;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Lab4._5.Views
 {
@@ -14,116 +16,94 @@ namespace Lab4._5.Views
             Loaded += MainWindow_Loaded;
         }
 
-        private bool _isInitialized = false;
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private void MainWindow_Loaded(object windowSender, RoutedEventArgs loadedArgs)
         {
-            // ===== NumericUpDown =====
-
-            // TUNNELING
-            this.AddHandler(
+            // Tunneling для NumericUpDown
+            AddHandler(
                 NumericUpDown.PreviewValueChangedEvent,
-                new RoutedPropertyChangedEventHandler<int>(OnPreviewValueChanged));
+                new RoutedPropertyChangedEventHandler<int>(HandlePreviewValueChanged));
 
-            // BUBBLING
-            DemoNumeric.ValueChanged += DemoNumeric_ValueChanged;
-
-            // DIRECT
-            DemoNumeric.ValueRejected += DemoNumeric_ValueRejected;
-
-
-            // ===== ToggleSwitch =====
-
-            // TUNNELING
-            this.AddHandler(
-                ToggleSwitch.PreviewCheckedChangedEvent,
-                new RoutedEventHandler(OnPreviewCheckedChanged));
-
-            // BUBBLING
-            DemoToggle.CheckedChanged += DemoToggle_CheckedChanged;
-
-            // DIRECT
-            DemoToggle.ToggleClicked += DemoToggle_ToggleClicked;
-            _isInitialized = true;
+            // Bubbling для ToggleSwitch
+            AddHandler(
+                ToggleSwitch.CheckedChangedEvent,
+                new RoutedEventHandler(HandleRoleChanged));
         }
-        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+
+        // TUNNELING
+        // Проверка выполняется ДО изменения значения
+        private void HandlePreviewValueChanged(object controlSender,
+            RoutedPropertyChangedEventArgs<int> valueArgs)
+        {
+            if (valueArgs.NewValue > 20)
+            {
+                MessageBox.Show(
+                    "Нельзя заказать больше 20 товаров.",
+                    "Ограничение",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                valueArgs.Handled = true;
+            }
+        }
+
+        // BUBBLING
+        // Срабатывает после изменения состояния ToggleSwitch
+        private void HandleRoleChanged(object toggleSender, RoutedEventArgs toggleArgs)
+        {
+            if (DataContext is MainViewModel viewModel)
+            {
+                viewModel.StatusText = $"Роль изменена: {viewModel.CurrentRole}";
+            }
+        }
+
+        private void ExitMenuItem_Click(object menuSender, RoutedEventArgs clickArgs)
         {
             Application.Current.Shutdown();
         }
 
-        private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
+        private void AboutMenuItem_Click(object infoSender, RoutedEventArgs infoArgs)
         {
             MessageBox.Show(
                 "Магазин кофе и чая\n" +
-                "Лабораторная работа №4-5\n" +
-                "WPF приложение для продажи товаров\n\n" +
+                "Лабораторная работа №7\n\n" +
+                "Пользовательские элементы управления WPF\n" +
+                "DependencyProperty, RoutedEvent, RoutedUICommand\n\n" +
                 "© 2026",
                 "О программе",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
         }
-        // Tunneling — срабатывает ПЕРВЫМ (от окна к контролу)
-        private void OnPreviewValueChanged(object sender,
-            RoutedPropertyChangedEventArgs<int> e)
+
+        // Проверяем, можно ли выполнить команду
+        private void BuyProduct_CanExecute(object commandSender,
+            CanExecuteRoutedEventArgs commandArgs)
         {
-            LogEvent($"[TUNNELING] PreviewValueChanged: {e.OldValue} -> {e.NewValue}");
+            if (DataContext is MainViewModel mainViewModel)
+            {
+                commandArgs.CanExecute =
+                    mainViewModel.SelectedProduct != null &&
+                    mainViewModel.SelectedProduct.InStock &&
+                    !mainViewModel.IsAdminMode;
+            }
+            else
+            {
+                commandArgs.CanExecute = false;
+            }
         }
 
-        // Bubbling — срабатывает ВТОРЫМ (от контрола к окну)
-        private void DemoNumeric_ValueChanged(object sender,
-            RoutedPropertyChangedEventArgs<int> e)
+        // Выполнение RoutedUICommand
+        private void BuyProduct_Executed(object commandSender,
+            ExecutedRoutedEventArgs commandArgs)
         {
-            if (!_isInitialized || NumericResult == null)
-                return;
+            if (DataContext is MainViewModel mainViewModel)
+            {
+                Product selectedItem = mainViewModel.SelectedProduct;
 
-            NumericResult.Text = $"Значение: {e.NewValue}";
-            LogEvent($"[BUBBLING] ValueChanged: {e.OldValue} -> {e.NewValue}");
-        }
-        // Direct — только на контроле
-        private void DemoNumeric_ValueRejected(object sender, RoutedEventArgs e)
-        {
-            LogEvent($"[DIRECT] ValueRejected");
-            MessageBox.Show("Достигнуто граничное значение!",
-                           "Предупреждение",
-                           MessageBoxButton.OK,
-                           MessageBoxImage.Warning);
-        }
-
-        // Tunneling — срабатывает ПЕРВЫМ
-        private void OnPreviewCheckedChanged(object sender, RoutedEventArgs e)
-        {
-            LogEvent($"[TUNNELING] PreviewCheckedChanged");
-        }
-
-        // Bubbling — срабатывает ВТОРЫМ
-        private void DemoToggle_CheckedChanged(object sender, RoutedEventArgs e)
-        {
-            if (!_isInitialized || ToggleResult == null)
-                return;
-
-            ToggleResult.Text = DemoToggle.IsChecked
-                ? "  Включено"
-                : "  Выключено";
-
-            LogEvent($"[BUBBLING] CheckedChanged: {DemoToggle.IsChecked}");
-        }
-
-        // Direct — только на контроле
-        private void DemoToggle_ToggleClicked(object sender, RoutedEventArgs e)
-        {
-            LogEvent($"[DIRECT] ToggleClicked");
-        }
-
-        private void LogEvent(string message)
-        {
-            EventLog.Text += $"[{DateTime.Now:HH:mm:ss}] {message}\n";
-            EventLog.ScrollToEnd();
-        }
-
-        private void ClearLog_Click(object sender, RoutedEventArgs e)
-        {
-            EventLog.Text = "";
+                if (selectedItem != null)
+                {
+                    mainViewModel.BuyProductCommand.Execute(selectedItem);
+                }
+            }
         }
     }
-
 }
