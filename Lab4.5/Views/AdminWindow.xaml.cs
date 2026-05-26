@@ -10,5 +10,9 @@ namespace Lab4._5.Views
             InitializeComponent();
             DataContext = new AdminViewModel();
         }
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

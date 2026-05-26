@@ -422,6 +422,8 @@ namespace Lab4._5.ViewModels
                 _dataService.UpdateProduct(product);
                 RefreshProductsList();
 
+                string customerName = User.CurrentUser?.DisplayName ?? "Клиент";
+                _dataService.CreateOrder(customerName, product, product.BuyCount);
                 // Добавляем действие в Undo стек
                 var boughtProduct = product;
                 _undoStack.Push(new UndoRedoAction

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Lab4._5.Database;
+using Lab4._5.Models;
+using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Windows;
-using Lab4._5.Database;
-using Lab4._5.Models;
-using Microsoft.Data.Sqlite;
+using System.Windows.Controls;
 
 namespace Lab4._5.Services
 {
@@ -17,15 +18,21 @@ namespace Lab4._5.Services
         private readonly ProductRepository _productRepo;
         private readonly CategoryRepository _categoryRepo;
         private bool _useDatabase = true;  // По умолчанию работаем с БД
+        private OrderRepository _orderRepo;
+        private OrderItemRepository _orderItemRepo;
 
         public DataService()
         {
-            _productRepo = new ProductRepository(DatabaseHelper.GetConnectionString());
-            _categoryRepo = new CategoryRepository(DatabaseHelper.GetConnectionString());
+            string connectionString = DatabaseHelper.GetConnectionString(); // ЭТО КЛЮЧЕВОЕ!
+
+            _productRepo = new ProductRepository(connectionString);
+            _categoryRepo = new CategoryRepository(connectionString);
+            _orderRepo = new OrderRepository(connectionString);      // Теперь работает
+            _orderItemRepo = new OrderItemRepository(connectionString); // Теперь работает
+
             _products = new List<Product>();
             _categories = new List<Category>();
 
-            // Загружаем данные из БД при создании сервиса
             LoadFromDatabase();
         }
 
@@ -264,6 +271,93 @@ namespace Lab4._5.Services
         }
 
         // ========== НОВЫЕ МЕТОДЫ ДЛЯ БД (для лабы 8) ==========
+        public void CreateOrder(string customerName, Product product, int quantity)
+        {
+            if (!_useDatabase) return;
+
+            using var connection = new SqliteConnection(DatabaseHelper.GetConnectionString());
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                var order = new Order
+                {
+                    CustomerName = customerName,
+                    OrderDate = DateTime.Now,
+                    TotalAmount = product.FinalPrice * quantity
+                };
+
+                int orderId = _orderRepo.Add(order, transaction);
+
+                var orderItem = new OrderItem
+                {
+                    OrderId = orderId,
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                    Quantity = quantity,
+                    UnitPrice = product.FinalPrice
+                };
+
+                _orderItemRepo.Add(orderItem, transaction);
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                System.Diagnostics.Debug.WriteLine($"Ошибка создания заказа: {ex.Message}");
+            }
+        }
+        public List<Order> GetAllOrders()
+        {
+            return _useDatabase ? _orderRepo.GetAll() : new List<Order>();
+        }
+
+        public async Task<List<Order>> GetAllOrdersAsync()
+        {
+            if (_useDatabase)
+                return await _orderRepo.GetAllAsync();
+            return new List<Order>();
+        }
+
+        public List<OrderItem> GetAllOrderItems()
+        {
+            return _useDatabase ? _orderItemRepo.GetAll() : new List<OrderItem>();
+        }
+
+        public List<OrderItem> GetOrderItemsByOrderId(int orderId)
+        {
+            if (_useDatabase)
+                return _orderItemRepo.GetByOrderId(orderId);
+            return new List<OrderItem>();
+        }
+
+        public void AddOrder(Order order, List<OrderItem> items)
+        {
+            if (!_useDatabase) return;
+
+            using var connection = new SqliteConnection(DatabaseHelper.GetConnectionString());
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                int orderId = _orderRepo.Add(order, transaction);
+                foreach (var item in items)
+                {
+                    item.OrderId = orderId;
+                    _orderItemRepo.Add(item, transaction);
+                }
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
+
 
         // Асинхронная загрузка товаров
         public async System.Threading.Tasks.Task<List<Product>> GetAllProductsAsync()
