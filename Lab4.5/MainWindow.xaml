@@ -8,7 +8,6 @@
         Height="600" Width="1200"
         MinHeight="400" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
-        Cursor="/Resources/cursor.cur"
         Background="{DynamicResource BackgroundColor}"
         Icon="/Resources/icon.ico">
 
@@ -99,7 +98,7 @@
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
             <MenuItem Header="{DynamicResource MenuFile}">
                 <MenuItem Header="{DynamicResource MenuLoad}" Command="{Binding LoadDataCommand}"/>
-                <MenuItem Header="{DynamicResource MenuSave}" Command="{Binding SaveCommand}"/>
+                <MenuItem Header="{DynamicResource MenuSave}" Command="{Binding SaveCommand}" />
                 <Separator/>
                 <MenuItem Header="{DynamicResource MenuExit}" Click="ExitMenuItem_Click"/>
             </MenuItem>
@@ -111,27 +110,21 @@
             <MenuItem Header="{DynamicResource Account}" Command="{Binding OpenAccountCommand}"/>
             <MenuItem Header="{DynamicResource Undo}" Command="{Binding UndoCommand}"/>
             <MenuItem Header="{DynamicResource Redo}" Command="{Binding RedoCommand}"/>
+            <MenuItem Header="О программе" Click="MenuItem_Click"/>
+            <!-- УЖЕ ЕСТЬ -->
         </Menu>
 
         <!-- Панель управления -->
         <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
-                    <Button Content="{DynamicResource BtnRefresh}" Command="{Binding LoadDataCommand}"/>
-                    <Button Content="{DynamicResource BtnSave}" Command="{Binding SaveCommand}" />
-                </StackPanel>
-                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
-                    <Button Content="RU" Command="{Binding SwitchLanguageCommand}" CommandParameter="ru-RU"/>
-                    <Button Content="EN" Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US" />
-                </StackPanel>
-                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                        <Button Content="☀" ToolTip="Светло-зелёная" Command="{Binding SwitchThemeCommand}" CommandParameter="LightGreenTheme" Margin="0,2,2,0"/>
-                        <Button Content="🌙" ToolTip="Тёмная" Command="{Binding SwitchThemeCommand}" CommandParameter="DarkGreenTheme" Margin="0,2,2,0"/>
-                        <Button Content="💧" ToolTip="Голубая" Command="{Binding SwitchThemeCommand}" CommandParameter="BlueTheme" Margin="0,2,2,0"/>
-                    </StackPanel>
-                    <Button Content="👑 Админ-панель" ToolTip="Управление БД (CRUD, SQL сортировка, топ товаров)" Command="{Binding OpenAdminWindowCommand}" Background="DarkSlateBlue" Foreground="White" Margin="0,4,0,0"/>
-                </StackPanel>
+                <Button Content="{DynamicResource BtnRefresh}" Command="{Binding LoadDataCommand}" Margin="0,0,5,0"/>
+                <Button Content="{DynamicResource BtnSave}" Command="{Binding SaveCommand}" Margin="0,0,15,0"/>
+                <Button Content="RU" Command="{Binding SwitchLanguageCommand}" CommandParameter="ru-RU" Margin="0,0,2,0"/>
+                <Button Content="EN" Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US" Margin="0,0,15,0"/>
+                <Button Content="☀" ToolTip="Светло-зелёная" Command="{Binding SwitchThemeCommand}" CommandParameter="LightGreenTheme" Margin="0,0,2,0"/>
+                <Button Content="🌙" ToolTip="Тёмная" Command="{Binding SwitchThemeCommand}" CommandParameter="DarkGreenTheme" Margin="0,0,2,0"/>
+                <Button Content="💧" ToolTip="Голубая" Command="{Binding SwitchThemeCommand}" CommandParameter="BlueTheme" Margin="0,0,15,0"/>
+                <Button Content="👑 Админ-панель" Command="{Binding OpenAdminWindowCommand}" Background="DarkSlateBlue" Foreground="White"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
@@ -193,7 +186,7 @@
         </Border>
 
         <!-- Список товаров -->
-        <ScrollViewer Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto">
             <ListBox ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}"
                      Background="Transparent" BorderBrush="Transparent">
                 <ListBox.ItemsPanel>
@@ -289,17 +282,35 @@
             </ListBox>
         </ScrollViewer>
 
-        <!-- Статус бар -->
+        <!-- Статус бар с индикаторами маршрутизации -->
         <StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <StatusBarItem>
-                <TextBlock>
-                    <TextBlock.Text>
-                        <MultiBinding StringFormat="{}{0}: {1}">
-                            <Binding Path="ProductsCountText"/>
-                            <Binding Path="Products.Count"/>
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <!-- TUNNELING индикатор -->
+                    <Border x:Name="TunnelingIndicator" Width="20" Height="20" 
+                            Background="LightBlue" CornerRadius="3" Margin="0,0,5,0"
+                            ToolTip="Tunneling (сверху вниз)"/>
+                    <TextBlock Text="Tunneling" Margin="0,0,15,0" FontSize="11"/>
+
+                    <!-- BUBBLING индикатор -->
+                    <Border x:Name="BubblingIndicator" Width="20" Height="20" 
+                            Background="LightGreen" CornerRadius="3" Margin="0,0,5,0"
+                            ToolTip="Bubbling (снизу вверх)"/>
+                    <TextBlock Text="Bubbling" Margin="0,0,15,0" FontSize="11"/>
+
+                    <!-- DIRECT индикатор -->
+                    <Border x:Name="DirectIndicator" Width="20" Height="20" 
+                            Background="LightCoral" CornerRadius="3" Margin="0,0,5,0"
+                            ToolTip="Direct (только на элементе)"/>
+                    <TextBlock Text="Direct" FontSize="11"/>
+
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="15,0"/>
+
+                    <TextBlock x:Name="RoutingLog" Text="Готов" FontSize="11" Foreground="Gray"/>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="{Binding Products.Count, StringFormat='Товаров: {0}'}" FontSize="11"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>
