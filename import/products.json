@@ -1,29 +1,7 @@
 [
   {
-    "Id": 3,
-    "Name": "\u0414\u0430\u0439 \u0425\u0443\u043D \u041F\u0430",
-    "FullName": "\u041A\u0440\u0430\u0441\u043D\u044B\u0439 \u0445\u0430\u043B\u0430\u0442, \u0443\u043B\u0443\u043D 100\u0433",
-    "Description": "\u0417\u043D\u0430\u043C\u0435\u043D\u0438\u0442\u044B\u0439 \u043A\u0438\u0442\u0430\u0439\u0441\u043A\u0438\u0439 \u0443\u043B\u0443\u043D \u0441 \u0433\u043B\u0443\u0431\u043E\u043A\u0438\u043C \u0432\u043A\u0443\u0441\u043E\u043C.",
-    "CategoryId": 6,
-    "RelatedProductIds": [],
-    "Rating": 4.9,
-    "Price": 2350,
-    "Quantity": 16,
-    "Color": "\u0422\u0435\u043C\u043D\u043E-\u043A\u043E\u0440\u0438\u0447\u043D\u0435\u0432\u044B\u0439",
-    "Size": "100\u0433",
-    "Country": "\u041A\u0438\u0442\u0430\u0439",
-    "Discount": 0,
-    "InStock": true,
-    "SoldCount": 44,
-    "Manufacturer": "Wuyi Star Tea",
-    "ImagePaths": [
-      "C:\\Users\\ADMIN\\Pictures\\PC\\1366x768_782377_[www.ArtFile.ru].jpg"
-    ],
-    "FirstImagePath": "C:\\Users\\ADMIN\\Pictures\\PC\\1366x768_782377_[www.ArtFile.ru].jpg",
-    "FinalPrice": 2350
-  },
-  {
-    "Id": 8558,
+    "BuyCount": 1,
+    "Id": 2,
     "Name": "\u0423\u043B\u0443\u043D",
     "FullName": "\u0427\u0430\u0439\u043D\u044B\u0439 \u0434\u0440\u0430\u043A\u043E\u043D",
     "Description": "\u041E\u0447\u0435\u043D\u044C \u043A\u0440\u0435\u043F\u043A\u0438\u0439 \u0438 \u0432\u043A\u0443\u0441\u043D\u044B\u0439 \u0447\u0430\u0439",
@@ -31,13 +9,13 @@
     "RelatedProductIds": [],
     "Rating": 4,
     "Price": 1500,
-    "Quantity": 98,
+    "Quantity": 96,
     "Color": "",
     "Size": "",
     "Country": "",
     "Discount": 5,
     "InStock": true,
-    "SoldCount": 2,
+    "SoldCount": 4,
     "Manufacturer": "",
     "ImagePaths": [
       "C:\\Study\\Second_year\\OOP\\Spring\\labs\\Lab4.5\\image\\02183960.n_1.png"
@@ -46,7 +24,8 @@
     "FinalPrice": 1425.00
   },
   {
-    "Id": 9833,
+    "BuyCount": 1,
+    "Id": 5,
     "Name": "\u041A\u0430\u043A\u043E\u0439-\u0442\u043E \u0447\u0430\u0439",
     "FullName": "\u041E\u0447\u0435\u043D\u044C \u043A\u043B\u0430\u0441\u0441\u043D\u044B\u0439 \u0447\u0430\u0439",
     "Description": "\u041F\u043E\u0442\u0440\u044F\u0441\u0430\u044E\u0449\u0438\u0439 \u0447\u0430\u0439",
@@ -54,18 +33,42 @@
     "RelatedProductIds": [],
     "Rating": 4.9,
     "Price": 1670,
-    "Quantity": 5,
+    "Quantity": 4,
     "Color": "\u041A\u0440\u0430\u0441\u0438\u0432\u044B\u0439",
     "Size": "100\u0433",
     "Country": "\u0410\u043D\u0433\u043B\u0438\u044F",
     "Discount": 6,
     "InStock": true,
-    "SoldCount": 2,
+    "SoldCount": 3,
     "Manufacturer": "\u0411\u0435\u043B\u0430\u0440\u0443\u0441\u044C",
     "ImagePaths": [
       "C:\\Study\\Second_year\\OOP\\Spring\\labs\\Lab4.5\\image\\zeleniy-kitayskiy-chay-1763029576402.jpg"
     ],
     "FirstImagePath": "C:\\Study\\Second_year\\OOP\\Spring\\labs\\Lab4.5\\image\\zeleniy-kitayskiy-chay-1763029576402.jpg",
     "FinalPrice": 1569.80
+  },
+  {
+    "BuyCount": 1,
+    "Id": 6,
+    "Name": "\u041D\u0435\u0441\u043A\u0430\u0444\u0435",
+    "FullName": "\u041D\u0435\u0441\u043A\u0430\u0444\u0435 \u0433\u043E\u043B\u0434",
+    "Description": "\u041A\u043E\u0444\u0435 \u0432 \u0437\u0435\u0440\u043D\u0430\u0445, \u043D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u044B\u0439, \u043D\u0430\u043F\u043E\u043B\u043D\u0435\u043D \u0430\u0440\u043E\u043C\u0430\u0442\u043E\u043C \u043E\u0442\u044B\u0445\u0430",
+    "CategoryId": 1,
+    "RelatedProductIds": [],
+    "Rating": 3.9,
+    "Price": 2000,
+    "Quantity": 24,
+    "Color": "\u041A\u043E\u0440\u0438\u0447\u043D\u0435\u0432\u044B\u0439",
+    "Size": "900",
+    "Country": "\u0410\u043D\u0433\u043B\u0438\u044F",
+    "Discount": 5,
+    "InStock": true,
+    "SoldCount": 0,
+    "Manufacturer": "\u0424\u0440\u0430\u043D\u0446\u0438\u044F",
+    "ImagePaths": [
+      "C:\\Study\\Second_year\\OOP\\Spring\\labs\\Lab4.5\\image\\3578-kofein-rastvorimyj_kofe-ristretto-kofejnaya_chashka-espresso-3840x2160.jpg"
+    ],
+    "FirstImagePath": "C:\\Study\\Second_year\\OOP\\Spring\\labs\\Lab4.5\\image\\3578-kofein-rastvorimyj_kofe-ristretto-kofejnaya_chashka-espresso-3840x2160.jpg",
+    "FinalPrice": 1900.00
   }
 ]

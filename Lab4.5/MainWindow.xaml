@@ -8,19 +8,15 @@
         Height="600" Width="1200"
         MinHeight="400" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
-        Cursor="/Resources/cursor.cur"
         Background="{DynamicResource BackgroundColor}"
         Icon="/Resources/icon.ico">
-    
+
     <Window.CommandBindings>
-
-        <CommandBinding
-        Command="cmd:CustomCommands.BuyProduct"
-        Executed="BuyProduct_Executed"
-        CanExecute="BuyProduct_CanExecute"/>
-
+        <CommandBinding Command="cmd:CustomCommands.BuyProduct"
+                        Executed="BuyProduct_Executed"
+                        CanExecute="BuyProduct_CanExecute"/>
     </Window.CommandBindings>
-    
+
     <Window.Resources>
         <converters:RatingToStarsConverter x:Key="RatingToStarsConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -30,7 +26,6 @@
         <converters:StockToTextConverter x:Key="StockToTextConverter"/>
         <converters:PriceToStringConverter x:Key="PriceToStringConverter"/>
 
-        <!-- Стиль круглой кнопки -->
         <Style x:Key="RoundButtonStyle" TargetType="Button">
             <Setter Property="Width" Value="40"/>
             <Setter Property="Height" Value="40"/>
@@ -50,8 +45,7 @@
                                 <Border.RenderTransform>
                                     <ScaleTransform x:Name="scale" ScaleX="1" ScaleY="1"/>
                                 </Border.RenderTransform>
-                                <ContentPresenter HorizontalAlignment="Center" 
-                              VerticalAlignment="Center"/>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
@@ -59,11 +53,11 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="scale"
-                                     Storyboard.TargetProperty="ScaleX"
-                                     To="1.15" Duration="0:0:0.15"/>
+                                                         Storyboard.TargetProperty="ScaleX"
+                                                         To="1.15" Duration="0:0:0.15"/>
                                         <DoubleAnimation Storyboard.TargetName="scale"
-                                     Storyboard.TargetProperty="ScaleY"
-                                     To="1.15" Duration="0:0:0.15"/>
+                                                         Storyboard.TargetProperty="ScaleY"
+                                                         To="1.15" Duration="0:0:0.15"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -71,11 +65,11 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="scale"
-                                     Storyboard.TargetProperty="ScaleX"
-                                     To="1" Duration="0:0:0.15"/>
+                                                         Storyboard.TargetProperty="ScaleX"
+                                                         To="1" Duration="0:0:0.15"/>
                                         <DoubleAnimation Storyboard.TargetName="scale"
-                                     Storyboard.TargetProperty="ScaleY"
-                                     To="1" Duration="0:0:0.15"/>
+                                                         Storyboard.TargetProperty="ScaleY"
+                                                         To="1" Duration="0:0:0.15"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -104,7 +98,7 @@
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
             <MenuItem Header="{DynamicResource MenuFile}">
                 <MenuItem Header="{DynamicResource MenuLoad}" Command="{Binding LoadDataCommand}"/>
-                <MenuItem Header="{DynamicResource MenuSave}" Command="{Binding SaveCommand}"/>
+                <MenuItem Header="{DynamicResource MenuSave}" Command="{Binding SaveCommand}" />
                 <Separator/>
                 <MenuItem Header="{DynamicResource MenuExit}" Click="ExitMenuItem_Click"/>
             </MenuItem>
@@ -114,49 +108,47 @@
                 <MenuItem Header="{DynamicResource MenuDeleteProduct}" Command="{Binding DeleteProductCommand}"/>
             </MenuItem>
             <MenuItem Header="{DynamicResource Account}" Command="{Binding OpenAccountCommand}"/>
-            <!-- Undo/Redo кнопки -->
             <MenuItem Header="{DynamicResource Undo}" Command="{Binding UndoCommand}"/>
             <MenuItem Header="{DynamicResource Redo}" Command="{Binding RedoCommand}"/>
+            <MenuItem Header="О программе" Click="MenuItem_Click"/>
+            <!-- УЖЕ ЕСТЬ -->
         </Menu>
 
         <!-- Панель управления -->
         <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                <Button Content="{DynamicResource BtnRefresh}" Command="{Binding LoadDataCommand}" 
-                         Margin="0,0,5,0"/>
-                <Button Content="{DynamicResource BtnSave}" Command="{Binding SaveCommand}" />
-
-                <!-- Языки -->
-                <Button Content="RU" Command="{Binding SwitchLanguageCommand}" 
-                        CommandParameter="ru-RU" Margin="10,0,2,0"/>
-                <Button Content="EN" Command="{Binding SwitchLanguageCommand}" 
-                        CommandParameter="en-US" />
-
-                <!-- Темы -->
-                <Button Content="☀" ToolTip="Светло-зелёная" Command="{Binding SwitchThemeCommand}" 
-                        CommandParameter="LightGreenTheme" Margin="10,0,2,0"/>
-                <Button Content="🌙" ToolTip="Тёмная" Command="{Binding SwitchThemeCommand}" 
-                        CommandParameter="DarkGreenTheme" Margin="0,0,2,0"/>
-                <Button Content="💧" ToolTip="Голубая" Command="{Binding SwitchThemeCommand}" 
-                        CommandParameter="BlueTheme"/>
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                    <Button Content="{DynamicResource BtnRefresh}" Command="{Binding LoadDataCommand}"/>
+                    <Button Content="{DynamicResource BtnSave}" Command="{Binding SaveCommand}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                    <Button Content="RU" Command="{Binding SwitchLanguageCommand}" CommandParameter="ru-RU"/>
+                    <Button Content="EN" Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <Button Content="☀" ToolTip="Светло-зелёная" Command="{Binding SwitchThemeCommand}" CommandParameter="LightGreenTheme"/>
+                        <Button Content="🌙" ToolTip="Тёмная" Command="{Binding SwitchThemeCommand}" CommandParameter="DarkGreenTheme"/>
+                        <Button Content="💧" ToolTip="Голубая" Command="{Binding SwitchThemeCommand}" CommandParameter="BlueTheme"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <Button Content="👑 Админ-панель" Command="{Binding OpenAdminWindowCommand}" Background="DarkSlateBlue" Foreground="White"/>
+                        <Button Content="📊 EF Демо" ToolTip="Лаба 9: Entity Framework" Command="{Binding OpenEFDemoCommand}"  Background="Purple" Foreground="White"/>
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                 <TextBlock Text="{DynamicResource LabelRole}" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <TextBlock Text="{Binding CurrentRole}" VerticalAlignment="Center" 
-                           FontWeight="Bold" Margin="0,0,10,0"/>
-                <controls:ToggleSwitch x:Name="RoleToggle"
-                       Width="90"
-                       Height="35"
-                       IsChecked="{Binding IsAdminMode}"
-                       OnText="ADMIN"
-                       OffText="USER"/>
+                <TextBlock Text="{Binding CurrentRole}" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
+                <controls:ToggleSwitch x:Name="RoleToggle" Width="90" Height="35"
+                                       IsChecked="{Binding IsAdminMode}"
+                                       OnText="ADMIN" OffText="USER"/>
             </StackPanel>
 
             <StackPanel HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,5">
-                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
-                             Width="300" Margin="0,0,5,0"/>
+                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="300" Margin="0,0,5,0"/>
                     <Button Content="{DynamicResource BtnSearch}" Command="{Binding SearchCommand}" Width="80"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -205,7 +197,7 @@
         </Border>
 
         <!-- Список товаров -->
-        <ScrollViewer Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto">
             <ListBox ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}"
                      Background="Transparent" BorderBrush="Transparent">
                 <ListBox.ItemsPanel>
@@ -257,28 +249,20 @@
                                         </TextBlock.Text>
                                     </TextBlock>
                                 </StackPanel>
-
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,10">
                                     <TextBlock Text="Количество:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                    <controls:NumericUpDown Width="120"
-                                        Height="35"
-                                        MinValue="1"
-                                        MaxValue="{Binding Quantity}"
-                                        Value="{Binding BuyCount, Mode=TwoWay}"/>     
+                                    <controls:NumericUpDown Width="120" Height="35"
+                                                            MinValue="1" MaxValue="{Binding Quantity}"
+                                                            Value="{Binding BuyCount, Mode=TwoWay}"/>
                                 </StackPanel>
-                                
-                                <!-- Круглые кнопки -->
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
                                     <Button Content="📄" ToolTip="{DynamicResource BtnDetails}"
-                                            Background="{DynamicResource DangerColor}"
-                                            Style="{StaticResource RoundButtonStyle}"
+                                            Background="{DynamicResource DangerColor}" Style="{StaticResource RoundButtonStyle}"
                                             Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"
                                             CommandParameter="{Binding}" Margin="0,0,10,0"/>
                                     <Button FontFamily="Segoe MDL2 Assets" Content="&#xE719;" ToolTip="{DynamicResource Buy}"
-                                            Background="{DynamicResource AccentColor}"
-                                            Style="{StaticResource RoundButtonStyle}"
-                                            Command="cmd:CustomCommands.BuyProduct"
-                                            CommandParameter="{Binding}"
+                                            Background="{DynamicResource AccentColor}" Style="{StaticResource RoundButtonStyle}"
+                                            Command="cmd:CustomCommands.BuyProduct" CommandParameter="{Binding}"
                                             Visibility="{Binding DataContext.IsAdminMode, 
                                             Converter={StaticResource BooleanToVisibilityConverter}, 
                                             ConverterParameter=invert,
@@ -309,17 +293,35 @@
             </ListBox>
         </ScrollViewer>
 
-        <!-- Статус бар -->
+        <!-- Статус бар с индикаторами маршрутизации -->
         <StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <StatusBarItem>
-                <TextBlock>
-                    <TextBlock.Text>
-                        <MultiBinding StringFormat="{}{0}: {1}">
-                            <Binding Path="ProductsCountText"/>
-                            <Binding Path="Products.Count"/>
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <!-- TUNNELING индикатор -->
+                    <Border x:Name="TunnelingIndicator" Width="20" Height="20" 
+                            Background="LightBlue" CornerRadius="3" Margin="0,0,5,0"
+                            ToolTip="Tunneling (сверху вниз)"/>
+                    <TextBlock Text="Tunneling" Margin="0,0,15,0" FontSize="11"/>
+
+                    <!-- BUBBLING индикатор -->
+                    <Border x:Name="BubblingIndicator" Width="20" Height="20" 
+                            Background="LightGreen" CornerRadius="3" Margin="0,0,5,0"
+                            ToolTip="Bubbling (снизу вверх)"/>
+                    <TextBlock Text="Bubbling" Margin="0,0,15,0" FontSize="11"/>
+
+                    <!-- DIRECT индикатор -->
+                    <Border x:Name="DirectIndicator" Width="20" Height="20" 
+                            Background="LightCoral" CornerRadius="3" Margin="0,0,5,0"
+                            ToolTip="Direct (только на элементе)"/>
+                    <TextBlock Text="Direct" FontSize="11"/>
+
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="15,0"/>
+
+                    <TextBlock x:Name="RoutingLog" Text="Готов" FontSize="11" Foreground="Gray"/>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="{Binding Products.Count, StringFormat='Товаров: {0}'}" FontSize="11"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

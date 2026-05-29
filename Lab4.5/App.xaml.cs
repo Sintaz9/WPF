@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using Lab4._5.Database;  // Добавляем using для DatabaseHelper
 
 namespace Lab4._5
 {
@@ -9,6 +10,21 @@ namespace Lab4._5
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            // ========== НОВЫЙ КОД: Инициализация базы данных ==========
+            try
+            {
+                DatabaseHelper.InitializeDatabase();
+                // Можно добавить логирование успеха, если нужно
+                // System.Diagnostics.Debug.WriteLine("БД успешно инициализирована");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при инициализации базы данных:\n{ex.Message}",
+                    "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            // ========== КОНЕЦ НОВОГО КОДА ==========
+
             // Язык уже загружен в App.xaml, ничего не делаем
         }
 

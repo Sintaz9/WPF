@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -8,7 +7,7 @@ namespace Lab4._5.Controls
 {
     public partial class ToggleSwitch : UserControl
     {
-        // DependencyProperty для состояния с валидацией и коррекцией
+        // DependencyProperty для состояния
         public static readonly DependencyProperty IsCheckedProperty =
             DependencyProperty.Register(
                 "IsChecked",
@@ -21,39 +20,22 @@ namespace Lab4._5.Controls
                     CoerceIsChecked),
                 ValidateIsChecked);
 
-        // Цвет когда включен
         public static readonly DependencyProperty OnColorProperty =
-            DependencyProperty.Register(
-                "OnColor",
-                typeof(Brush),
-                typeof(ToggleSwitch),
+            DependencyProperty.Register("OnColor", typeof(Brush), typeof(ToggleSwitch),
                 new PropertyMetadata(new SolidColorBrush(Colors.Green)));
 
-        // Цвет когда выключен
         public static readonly DependencyProperty OffColorProperty =
-            DependencyProperty.Register(
-                "OffColor",
-                typeof(Brush),
-                typeof(ToggleSwitch),
+            DependencyProperty.Register("OffColor", typeof(Brush), typeof(ToggleSwitch),
                 new PropertyMetadata(new SolidColorBrush(Colors.LightGray)));
 
-        // Текст когда включен
         public static readonly DependencyProperty OnTextProperty =
-            DependencyProperty.Register(
-                "OnText",
-                typeof(string),
-                typeof(ToggleSwitch),
+            DependencyProperty.Register("OnText", typeof(string), typeof(ToggleSwitch),
                 new PropertyMetadata("ON"));
 
-        // Текст когда выключен
         public static readonly DependencyProperty OffTextProperty =
-            DependencyProperty.Register(
-                "OffText",
-                typeof(string),
-                typeof(ToggleSwitch),
+            DependencyProperty.Register("OffText", typeof(string), typeof(ToggleSwitch),
                 new PropertyMetadata("OFF"));
 
-        // Свойства-обёртки
         public bool IsChecked
         {
             get => (bool)GetValue(IsCheckedProperty);
@@ -84,46 +66,37 @@ namespace Lab4._5.Controls
             set => SetValue(OffTextProperty, value);
         }
 
-        // BUBBLING событие — всплывает вверх
+        // BUBBLING событие (всплывает вверх)
         public static readonly RoutedEvent CheckedChangedEvent =
-            EventManager.RegisterRoutedEvent(
-                "CheckedChanged",
-                RoutingStrategy.Bubble,
-                typeof(RoutedEventHandler),
-                typeof(ToggleSwitch));
+            EventManager.RegisterRoutedEvent("CheckedChanged", RoutingStrategy.Bubble,
+                typeof(RoutedEventHandler), typeof(ToggleSwitch));
 
         public event RoutedEventHandler CheckedChanged
         {
-            add { AddHandler(CheckedChangedEvent, value); }
-            remove { RemoveHandler(CheckedChangedEvent, value); }
+            add => AddHandler(CheckedChangedEvent, value);
+            remove => RemoveHandler(CheckedChangedEvent, value);
         }
 
-        // TUNNELING событие — спускается вниз
+        // TUNNELING событие (спускается вниз)
         public static readonly RoutedEvent PreviewCheckedChangedEvent =
-            EventManager.RegisterRoutedEvent(
-                "PreviewCheckedChanged",
-                RoutingStrategy.Tunnel,
-                typeof(RoutedEventHandler),
-                typeof(ToggleSwitch));
+            EventManager.RegisterRoutedEvent("PreviewCheckedChanged", RoutingStrategy.Tunnel,
+                typeof(RoutedEventHandler), typeof(ToggleSwitch));
 
         public event RoutedEventHandler PreviewCheckedChanged
         {
-            add { AddHandler(PreviewCheckedChangedEvent, value); }
-            remove { RemoveHandler(PreviewCheckedChangedEvent, value); }
+            add => AddHandler(PreviewCheckedChangedEvent, value);
+            remove => RemoveHandler(PreviewCheckedChangedEvent, value);
         }
 
-        // DIRECT событие — только на контроле
+        // DIRECT событие (только на контроле)
         public static readonly RoutedEvent ToggleClickedEvent =
-            EventManager.RegisterRoutedEvent(
-                "ToggleClicked",
-                RoutingStrategy.Direct,
-                typeof(RoutedEventHandler),
-                typeof(ToggleSwitch));
+            EventManager.RegisterRoutedEvent("ToggleClicked", RoutingStrategy.Direct,
+                typeof(RoutedEventHandler), typeof(ToggleSwitch));
 
         public event RoutedEventHandler ToggleClicked
         {
-            add { AddHandler(ToggleClickedEvent, value); }
-            remove { RemoveHandler(ToggleClickedEvent, value); }
+            add => AddHandler(ToggleClickedEvent, value);
+            remove => RemoveHandler(ToggleClickedEvent, value);
         }
 
         public ToggleSwitch()
@@ -133,29 +106,19 @@ namespace Lab4._5.Controls
         }
 
         // ВАЛИДАЦИЯ (формальная, всегда true)
-        private static bool ValidateIsChecked(object value)
-        {
-            return value is bool;
-        }
+        private static bool ValidateIsChecked(object value) => value is bool;
 
-        // КОРРЕКЦИЯ (не используется, оставлена для демонстрации)
-        private static object CoerceIsChecked(DependencyObject d, object baseValue)
-        {
-            return baseValue; // Пропускаем как есть
-        }
+        // КОРРЕКЦИЯ (пропускаем как есть)
+        private static object CoerceIsChecked(DependencyObject d, object baseValue) => baseValue;
 
-        private static void OnIsCheckedChanged(DependencyObject d,
-            DependencyPropertyChangedEventArgs e)
+        private static void OnIsCheckedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (ToggleSwitch)d;
             bool isChecked = (bool)e.NewValue;
 
             control.UpdateVisualState(isChecked);
-
-            // Tunneling (сначала)
-            control.RaiseEvent(new RoutedEventArgs(PreviewCheckedChangedEvent, control));
-            // Bubbling (потом)
-            control.RaiseEvent(new RoutedEventArgs(CheckedChangedEvent, control));
+            control.RaiseEvent(new RoutedEventArgs(PreviewCheckedChangedEvent, control)); // Tunneling
+            control.RaiseEvent(new RoutedEventArgs(CheckedChangedEvent, control));       // Bubbling
         }
 
         private void UpdateVisualState(bool isChecked)
@@ -179,9 +142,7 @@ namespace Lab4._5.Controls
         private void SwitchBorder_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             IsChecked = !IsChecked;
-
-            // Direct событие — клик по переключателю
-            RaiseEvent(new RoutedEventArgs(ToggleClickedEvent, this));
+            RaiseEvent(new RoutedEventArgs(ToggleClickedEvent, this)); // Direct
         }
     }
 }
