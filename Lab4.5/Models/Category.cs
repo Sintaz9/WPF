@@ -22,5 +22,7 @@ namespace Lab4._5.Models
                 new Category { Id = 9, Name = "Аксессуары" }
             };
         }
+        // Навигационное свойство для EF (один ко многим)
+        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

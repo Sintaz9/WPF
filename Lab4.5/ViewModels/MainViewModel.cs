@@ -59,6 +59,7 @@ namespace Lab4._5.ViewModels
             RedoCommand = new RelayCommand(_ => Redo(), _ => _redoStack.Count > 0);
             SwitchDataSourceCommand = new RelayCommand(param => SwitchDataSource(param?.ToString()));
             OpenAdminWindowCommand = new RelayCommand(_ => OpenAdminWindow(), _ => IsAdminMode);
+            OpenEFDemoCommand = new RelayCommand(_ => OpenEFDemo());
 
             _categories = new ObservableCollection<Category>(_dataService.GetAllCategories());
             _products = new ObservableCollection<Product>();
@@ -210,6 +211,7 @@ namespace Lab4._5.ViewModels
         public ICommand RedoCommand { get; }
         public ICommand SwitchDataSourceCommand { get; }
         public ICommand OpenAdminWindowCommand { get; }
+        public ICommand OpenEFDemoCommand { get; }
 
 
         #endregion
@@ -325,6 +327,7 @@ namespace Lab4._5.ViewModels
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+
         }
 
         #endregion
@@ -722,5 +725,12 @@ namespace Lab4._5.ViewModels
         }
 
         #endregion
+
+        private void OpenEFDemo()
+        {
+            var efDemoWindow = new EFDemoWindow();
+            efDemoWindow.Owner = Application.Current.MainWindow;
+            efDemoWindow.ShowDialog();
+        }
     }
 }

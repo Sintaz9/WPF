@@ -176,5 +176,7 @@ namespace Lab4._5.Models
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        // Навигационное свойство для EF (многие к одному)
+        public virtual Category Category { get; set; }
     }
 }

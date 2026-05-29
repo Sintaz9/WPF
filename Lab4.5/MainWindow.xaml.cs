@@ -18,6 +18,24 @@ namespace Lab4._5.Views
             Loaded += MainWindow_Loaded;
         }
 
+        public ICommand OpenEFDemoCommand => new RelayCommand(_ => OpenEFDemo());
+
+        private void OpenEFDemo()
+        {
+            MessageBox.Show("Кнопка сработала! Сейчас откроем окно EF Demo");
+
+            try
+            {
+                var efDemoWindow = new EFDemoWindow();
+                efDemoWindow.Owner = this;
+                efDemoWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}\n\n{ex.StackTrace}");
+            }
+        }
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             //  TUNNELING 
@@ -131,7 +149,6 @@ namespace Lab4._5.Views
             }
         }
 
-        // ========== ДЛЯ ДЕМОНСТРАЦИИ DIRECT ==========
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             DirectIndicator.Background = Brushes.DarkRed;

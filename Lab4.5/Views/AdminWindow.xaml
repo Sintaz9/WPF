@@ -121,7 +121,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="180" IsReadOnly="False"/>
-                <DataGridTextColumn Header="Цена" Binding="{Binding Price, StringFormat=C}" Width="100" IsReadOnly="False"/>
+                <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="100" IsReadOnly="False"/>
                 <DataGridTextColumn Header="Скидка %" Binding="{Binding Discount}" Width="80" IsReadOnly="False"/>
                 <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="80" IsReadOnly="False"/>
                 <DataGridTextColumn Header="Рейтинг" Binding="{Binding Rating}" Width="80" IsReadOnly="False"/>
@@ -167,7 +167,7 @@
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                 <DataGridTextColumn Header="Дата" Binding="{Binding OrderDate, StringFormat=yyyy-MM-dd HH:mm}" Width="150"/>
                 <DataGridTextColumn Header="Клиент" Binding="{Binding CustomerName}" Width="150"/>
-                <DataGridTextColumn Header="Сумма" Binding="{Binding TotalAmount, StringFormat=C}" Width="100"/>
+                <DataGridTextColumn Header="Сумма" Binding="{Binding TotalAmount}" Width="100"/>
                 <DataGridTemplateColumn Header="Детали" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -192,7 +192,7 @@
                 <DataGridTextColumn Header="Заказ ID" Binding="{Binding OrderId}" Width="80"/>
                 <DataGridTextColumn Header="Товар" Binding="{Binding ProductName}" Width="200"/>
                 <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="80"/>
-                <DataGridTextColumn Header="Цена" Binding="{Binding UnitPrice, StringFormat=C}" Width="100"/>
+                <DataGridTextColumn Header="Цена" Binding="{Binding UnitPrice}" Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
 

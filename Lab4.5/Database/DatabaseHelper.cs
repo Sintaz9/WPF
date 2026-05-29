@@ -35,11 +35,52 @@ namespace Lab4._5.Database
                 {
                     CreateDatabase();
                 }
+                else
+                {
+                    // Добавляем недостающие колонки в существующую БД
+                    EnsureMissingColumns();
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при инициализации БД: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static void EnsureMissingColumns()
+        {
+            try
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                connection.Open();
+
+                // Проверяем и добавляем колонку BuyCount
+                bool hasBuyCount = false;
+                string pragmaSql = "PRAGMA table_info(Products)";
+                using var pragmaCommand = new SqliteCommand(pragmaSql, connection);
+                using var reader = pragmaCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    if (reader["name"].ToString() == "BuyCount")
+                    {
+                        hasBuyCount = true;
+                        break;
+                    }
+                }
+
+                if (!hasBuyCount)
+                {
+                    string addColumnSql = "ALTER TABLE Products ADD COLUMN BuyCount INTEGER DEFAULT 1";
+                    using var addCommand = new SqliteCommand(addColumnSql, connection);
+                    addCommand.ExecuteNonQuery();
+                    System.Diagnostics.Debug.WriteLine("Колонка BuyCount добавлена в таблицу Products");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Ошибка при добавлении колонки: {ex.Message}");
             }
         }
 
@@ -69,15 +110,16 @@ namespace Lab4._5.Database
                     Price DECIMAL(10,2) NOT NULL,
                     Discount REAL DEFAULT 0,
                     Quantity INTEGER DEFAULT 0,
-                    InStock INTEGER DEFAULT 0,  -- 0 = false, 1 = true
+                    InStock INTEGER DEFAULT 0,
                     Rating REAL DEFAULT 0,
                     SoldCount INTEGER DEFAULT 0,
-                    ImagePaths TEXT,  -- JSON-строка для хранения списка путей
-                    RelatedProductIds TEXT,  -- JSON-строка
+                    ImagePaths TEXT,
+                    RelatedProductIds TEXT,
+                    BuyCount INTEGER DEFAULT 1,
                     FOREIGN KEY(CategoryId) REFERENCES Categories(Id) ON DELETE SET NULL
                 );
 
-                -- Таблица заказов (новая для истории покупок)
+                -- Таблица заказов
                 CREATE TABLE Orders (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -97,7 +139,7 @@ namespace Lab4._5.Database
                     FOREIGN KEY(ProductId) REFERENCES Products(Id) ON DELETE RESTRICT
                 );
 
-                -- Таблица для лога удалённых товаров (для триггера)
+                -- Таблица для лога удалённых товаров
                 CREATE TABLE DeletedProductsLog (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     ProductName TEXT NOT NULL,
@@ -114,7 +156,7 @@ namespace Lab4._5.Database
                     VALUES (OLD.Name, OLD.Id, 'Admin');
                 END;
 
-                -- Представление для топ-товаров (эмуляция хранимой процедуры)
+                -- Представление для топ-товаров
                 CREATE VIEW TopProductsView AS
                 SELECT 
                     p.Id,
@@ -130,7 +172,7 @@ namespace Lab4._5.Database
             using var command = new SqliteCommand(createTablesSql, connection);
             command.ExecuteNonQuery();
 
-            // Заполняем категории начальными данными (из вашего Category.cs)
+            // Заполняем категории начальными данными
             InsertDefaultCategories(connection);
         }
 

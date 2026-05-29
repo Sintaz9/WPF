@@ -117,14 +117,25 @@
         <!-- Панель управления -->
         <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                <Button Content="{DynamicResource BtnRefresh}" Command="{Binding LoadDataCommand}" Margin="0,0,5,0"/>
-                <Button Content="{DynamicResource BtnSave}" Command="{Binding SaveCommand}" Margin="0,0,15,0"/>
-                <Button Content="RU" Command="{Binding SwitchLanguageCommand}" CommandParameter="ru-RU" Margin="0,0,2,0"/>
-                <Button Content="EN" Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US" Margin="0,0,15,0"/>
-                <Button Content="☀" ToolTip="Светло-зелёная" Command="{Binding SwitchThemeCommand}" CommandParameter="LightGreenTheme" Margin="0,0,2,0"/>
-                <Button Content="🌙" ToolTip="Тёмная" Command="{Binding SwitchThemeCommand}" CommandParameter="DarkGreenTheme" Margin="0,0,2,0"/>
-                <Button Content="💧" ToolTip="Голубая" Command="{Binding SwitchThemeCommand}" CommandParameter="BlueTheme" Margin="0,0,15,0"/>
-                <Button Content="👑 Админ-панель" Command="{Binding OpenAdminWindowCommand}" Background="DarkSlateBlue" Foreground="White"/>
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                    <Button Content="{DynamicResource BtnRefresh}" Command="{Binding LoadDataCommand}"/>
+                    <Button Content="{DynamicResource BtnSave}" Command="{Binding SaveCommand}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                    <Button Content="RU" Command="{Binding SwitchLanguageCommand}" CommandParameter="ru-RU"/>
+                    <Button Content="EN" Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <Button Content="☀" ToolTip="Светло-зелёная" Command="{Binding SwitchThemeCommand}" CommandParameter="LightGreenTheme"/>
+                        <Button Content="🌙" ToolTip="Тёмная" Command="{Binding SwitchThemeCommand}" CommandParameter="DarkGreenTheme"/>
+                        <Button Content="💧" ToolTip="Голубая" Command="{Binding SwitchThemeCommand}" CommandParameter="BlueTheme"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <Button Content="👑 Админ-панель" Command="{Binding OpenAdminWindowCommand}" Background="DarkSlateBlue" Foreground="White"/>
+                        <Button Content="📊 EF Демо" ToolTip="Лаба 9: Entity Framework" Command="{Binding OpenEFDemoCommand}"  Background="Purple" Foreground="White"/>
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
