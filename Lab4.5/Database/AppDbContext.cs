@@ -1,5 +1,6 @@
 ﻿using Lab4._5.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace Lab4._5.Database
 {
@@ -9,14 +10,17 @@ namespace Lab4._5.Database
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
 
-        // Отдельный файл БД для EF (не трогает CoffeeShop.db из лабы 8)
-        private static readonly string DbPath = "CoffeeShop.db";
+        public AppDbContext() : base() { }
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite($"Data Source={DbPath}");
+                var connectionString = ConfigurationManager.ConnectionStrings["CoffeeShopDB"]?.ConnectionString;
+
+                optionsBuilder.UseSqlite(connectionString);
             }
         }
 

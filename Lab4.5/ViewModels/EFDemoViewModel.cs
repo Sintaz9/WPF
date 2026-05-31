@@ -141,7 +141,6 @@ namespace Lab4._5.ViewModels
         }
 
         // UPDATE (редактирование)
-        // UPDATE (редактирование через существующее окно)
         private async void EditProduct()
         {
             if (SelectedProduct == null)
@@ -150,29 +149,6 @@ namespace Lab4._5.ViewModels
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
-            // Создаём копию для возможной отмены (как в админ-панели)
-            var originalProduct = new Product
-            {
-                Id = SelectedProduct.Id,
-                Name = SelectedProduct.Name,
-                FullName = SelectedProduct.FullName,
-                Description = SelectedProduct.Description,
-                CategoryId = SelectedProduct.CategoryId,
-                Manufacturer = SelectedProduct.Manufacturer,
-                Country = SelectedProduct.Country,
-                Color = SelectedProduct.Color,
-                Size = SelectedProduct.Size,
-                Price = SelectedProduct.Price,
-                Discount = SelectedProduct.Discount,
-                Quantity = SelectedProduct.Quantity,
-                InStock = SelectedProduct.InStock,
-                Rating = SelectedProduct.Rating,
-                SoldCount = SelectedProduct.SoldCount,
-                ImagePaths = SelectedProduct.ImagePaths != null
-                    ? new System.Collections.ObjectModel.ObservableCollection<string>(SelectedProduct.ImagePaths)
-                    : new System.Collections.ObjectModel.ObservableCollection<string>()
-            };
 
             var editWindow = new ProductEditWindow(SelectedProduct);
             editWindow.Owner = Application.Current.MainWindow;

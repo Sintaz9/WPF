@@ -17,10 +17,9 @@ namespace Lab4._5.Services
             _context = new AppDbContext();
         }
 
-        // ========== CREATE (Добавление) ==========
+        // CREATE
         public async Task<Product> AddProductAsync(Product product)
         {
-            // Заполняем обязательные поля, если они пустые (чтобы избежать ошибки NOT NULL)
             if (string.IsNullOrWhiteSpace(product.FullName))
                 product.FullName = product.Name ?? "Без названия";
             if (string.IsNullOrWhiteSpace(product.Description))
@@ -33,8 +32,6 @@ namespace Lab4._5.Services
                 product.Country = "";
             if (string.IsNullOrWhiteSpace(product.Manufacturer))
                 product.Manufacturer = "";
-            if (product.ImagePaths == null)
-                product.ImagePaths = new System.Collections.ObjectModel.ObservableCollection<string>();
             if (product.RelatedProductIds == null)
                 product.RelatedProductIds = new List<int>();
 
@@ -43,7 +40,7 @@ namespace Lab4._5.Services
             return product;
         }
 
-        // ========== READ (Чтение) ==========
+        // READ (Чтение)
         public async Task<List<Product>> GetAllProductsAsync()
         {
             return await _context.Products
@@ -63,14 +60,34 @@ namespace Lab4._5.Services
             return _context.Categories.ToList();
         }
 
-        // ========== UPDATE (Обновление) ==========
+        // UPDATE 
         public async Task UpdateProductAsync(Product product)
         {
-            _context.Entry(product).State = EntityState.Modified;
+            // Находим существующий товар в БД
+            var existing = await _context.Products.FindAsync(product.Id);
+            if (existing == null) return;
+
+            // Обновляем свойства
+            existing.Name = product.Name;
+            existing.FullName = product.FullName;
+            existing.Description = product.Description;
+            existing.Price = product.Price;
+            existing.Quantity = product.Quantity;
+            existing.Discount = product.Discount;
+            existing.CategoryId = product.CategoryId;
+            existing.Rating = product.Rating;
+            existing.InStock = product.InStock;
+            existing.SoldCount = product.SoldCount;
+            existing.Manufacturer = product.Manufacturer;
+            existing.Country = product.Country;
+            existing.Color = product.Color;
+            existing.Size = product.Size;
+            existing.BuyCount = product.BuyCount;
+
+            // Сохраняем изменения
             await _context.SaveChangesAsync();
         }
 
-        // ========== DELETE (Удаление) ==========
         public async Task<bool> DeleteProductAsync(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -81,7 +98,6 @@ namespace Lab4._5.Services
             return true;
         }
 
-        // ========== LINQ: ФИЛЬТРАЦИЯ И СОРТИРОВКА ==========
         public List<Product> GetFilteredProducts(
             string searchText = null,
             int? categoryId = null,
@@ -94,7 +110,6 @@ namespace Lab4._5.Services
                 .Include(p => p.Category)
                 .AsQueryable();
 
-            // ПОИСК по нескольким полям
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 var search = searchText.ToLower();
@@ -103,19 +118,14 @@ namespace Lab4._5.Services
                                          (p.Manufacturer != null && p.Manufacturer.ToLower().Contains(search)));
             }
 
-            // ФИЛЬТР по категории
             if (categoryId.HasValue)
-            {
                 query = query.Where(p => p.CategoryId == categoryId.Value);
-            }
 
-            // ФИЛЬТР по цене
             if (minPrice.HasValue)
                 query = query.Where(p => p.Price >= minPrice.Value);
             if (maxPrice.HasValue)
                 query = query.Where(p => p.Price <= maxPrice.Value);
 
-            // СОРТИРОВКА
             if (!string.IsNullOrWhiteSpace(sortBy))
             {
                 switch (sortBy.ToLower())

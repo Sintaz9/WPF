@@ -378,10 +378,7 @@ namespace Lab4._5.ViewModels
                 Quantity = SelectedProduct.Quantity,
                 InStock = SelectedProduct.InStock,
                 Rating = SelectedProduct.Rating,
-                SoldCount = SelectedProduct.SoldCount,
-                ImagePaths = SelectedProduct.ImagePaths != null
-                    ? new ObservableCollection<string>(SelectedProduct.ImagePaths)
-                    : new ObservableCollection<string>()
+                SoldCount = SelectedProduct.SoldCount
             };
 
             var editWindow = new ProductEditWindow(SelectedProduct);

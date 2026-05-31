@@ -11,17 +11,11 @@
         
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Заголовок -->
             <RowDefinition Height="Auto"/>
-            <!-- Кнопки навигации -->
             <RowDefinition Height="Auto"/>
-            <!-- Кнопки CRUD -->
             <RowDefinition Height="Auto"/>
-            <!-- Фильтры -->
             <RowDefinition Height="*"/>
-            <!-- DataGrid (главное место) -->
             <RowDefinition Height="Auto"/>
-            <!-- Статус бар -->
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="0,0,0,15">
@@ -35,13 +29,12 @@
             Margin="0,0,15,0"
             ToolTip="Вернуться в главное окно"/>
             
-            <!-- Заголовок -->
             <TextBlock Grid.Column="1" Text="Панель администратора" 
                FontSize="20" FontWeight="Bold"
                HorizontalAlignment="Center"
                Foreground="{DynamicResource AccentColor}"/>
         </Grid>
-        <!-- КНОПКИ НАВИГАЦИИ МЕЖДУ ТАБЛИЦАМИ -->
+        <!-- НАВИГАЦИЯ -->
         <WrapPanel Grid.Row="1" Margin="0,0,0,10">
             <RadioButton x:Name="rbProducts" Content="📦 Товары" GroupName="TableNav"
                          IsChecked="{Binding ShowProductsTable}" 
@@ -57,7 +50,6 @@
                          Margin="0,0,10,0" FontWeight="Bold" Padding="10,5"/>
         </WrapPanel>
 
-        <!-- ПАНЕЛЬ CRUD (только для товаров) -->
         <Border Grid.Row="2" Background="{DynamicResource SurfaceColor}" CornerRadius="8" 
                 Padding="10" Margin="0,0,0,10" Visibility="{Binding ProductsPanelVisible}">
             <WrapPanel>
@@ -76,7 +68,7 @@
             </WrapPanel>
         </Border>
 
-        <!-- ПАНЕЛЬ ФИЛЬТРОВ И СОРТИРОВКИ (только для товаров) -->
+        <!-- ПАНЕЛЬ ФИЛЬТРОВ И СОРТИРОВКИ -->
         <Border Grid.Row="3" Background="{DynamicResource SurfaceColor}" CornerRadius="8" 
                 Padding="10" Margin="0,0,0,10" Visibility="{Binding ProductsPanelVisible}">
             <StackPanel>
@@ -106,7 +98,6 @@
             </StackPanel>
         </Border>
 
-        <!-- ТАБЛИЦА ТОВАРОВ -->
         <DataGrid Grid.Row="4" 
                   ItemsSource="{Binding Products}" 
                   SelectedItem="{Binding SelectedProduct}"

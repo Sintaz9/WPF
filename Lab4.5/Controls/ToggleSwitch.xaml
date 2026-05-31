@@ -4,35 +4,18 @@
              Width="60" Height="30"
              Cursor="Hand">
 
-    <UserControl.Resources>
-        <!-- Анимация для переключателя -->
-        <Storyboard x:Key="SlideOn">
-            <ThicknessAnimation Storyboard.TargetName="Thumb"
-                               Storyboard.TargetProperty="Margin"
-                               To="30,2,2,2" Duration="0:0:0.15"/>
-        </Storyboard>
-        <Storyboard x:Key="SlideOff">
-            <ThicknessAnimation Storyboard.TargetName="Thumb"
-                               Storyboard.TargetProperty="Margin"
-                               To="2,2,30,2" Duration="0:0:0.15"/>
-        </Storyboard>
-    </UserControl.Resources>
-
     <Border x:Name="SwitchBorder" 
             CornerRadius="15" 
             BorderThickness="1"
+            Background="LightGray"
             MouseLeftButtonDown="SwitchBorder_MouseLeftButtonDown">
-        <Border.Background>
-            <SolidColorBrush x:Name="BackgroundBrush" Color="LightGray"/>
-        </Border.Background>
 
         <Grid>
             <!-- Ползунок -->
             <Border x:Name="Thumb" 
                     Width="26" Height="26"
                     CornerRadius="13"
-                    Margin="2,2,30,2"
-                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
                     Background="White">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="1" Opacity="0.3"/>
@@ -42,11 +25,11 @@
             <!-- Текст ON/OFF -->
             <TextBlock x:Name="StateText" 
                        Text="OFF"
-                       FontSize="11"
+                       FontSize="10"
                        FontWeight="Bold"
+                       Foreground="White"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Margin="0,0,0,0"/>
+                       VerticalAlignment="Center"/>
         </Grid>
     </Border>
 </UserControl>
