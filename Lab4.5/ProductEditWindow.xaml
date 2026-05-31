@@ -6,12 +6,12 @@
         Height="700" Width="600"
         MinHeight="600" MinWidth="500"
         WindowStartupLocation="CenterOwner"
-        Cursor="/Resources/cursor.cur"
         ResizeMode="CanResize"
         Background="{DynamicResource BackgroundColor}">
 
     <Window.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter"/>
 
         <Style x:Key="FormLabelStyle" TargetType="TextBlock">
             <Setter Property="FontWeight" Value="Bold"/>
@@ -108,26 +108,19 @@
                 <TextBlock Text="{Binding RatingError}" Style="{StaticResource ErrorStyle}" 
                            Visibility="{Binding HasRatingError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <!-- Изображения -->
-                <TextBlock Text="{DynamicResource ImagesLabel}"/>
+                <!-- Изображение (BLOB) -->
+                <TextBlock Text="Изображение"/>
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                    <Button Content="{DynamicResource BtnAddImage}" Click="AddImage_Click" 
+                    <Button Content="Добавить изображение" Click="AddImage_Click" 
                             Width="150" Height="25" Margin="0,0,10,0"/>
-                    <Button Content="{DynamicResource BtnRemoveImage}" Click="RemoveImage_Click" 
+                    <Button Content="Удалить изображение" Click="RemoveImage_Click" 
                             Width="150" Height="25"/>
                 </StackPanel>
 
-                <ListBox ItemsSource="{Binding ImagePaths}" SelectedItem="{Binding SelectedImagePath}"
-                         Height="80" Margin="0,5,0,10"
-                         BorderBrush="{DynamicResource SurfaceBorderColor}" BorderThickness="1">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" FontSize="11" Margin="2" TextTrimming="CharacterEllipsis"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-
-                <Image x:Name="PreviewImage" Height="150" Margin="0,0,0,10" Stretch="Uniform" Visibility="Collapsed"/>
+                <!-- Предпросмотр изображения -->
+                <Image x:Name="PreviewImage" Height="150" Margin="0,10,0,10" 
+                       Stretch="Uniform" Visibility="Collapsed"
+                       Source="{Binding Image, Converter={StaticResource ByteArrayToImageConverter}}"/>
 
                 <TextBlock Text="{DynamicResource RequiredFields}" FontSize="11" Margin="0,10,0,0"/>
             </StackPanel>

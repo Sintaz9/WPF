@@ -12,11 +12,9 @@ namespace Lab4._5.Database
 
         static DatabaseHelper()
         {
-            // Читаем строку подключения из App.config
             var connectionStringSettings = ConfigurationManager.ConnectionStrings["CoffeeShopDb"];
             if (connectionStringSettings == null)
             {
-                // Если нет в конфиге — используем значение по умолчанию
                 _connectionString = "Data Source=CoffeeShop.db;Version=3;";
             }
             else
@@ -35,52 +33,11 @@ namespace Lab4._5.Database
                 {
                     CreateDatabase();
                 }
-                else
-                {
-                    // Добавляем недостающие колонки в существующую БД
-                    EnsureMissingColumns();
-                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при инициализации БД: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private static void EnsureMissingColumns()
-        {
-            try
-            {
-                using var connection = new SqliteConnection(_connectionString);
-                connection.Open();
-
-                // Проверяем и добавляем колонку BuyCount
-                bool hasBuyCount = false;
-                string pragmaSql = "PRAGMA table_info(Products)";
-                using var pragmaCommand = new SqliteCommand(pragmaSql, connection);
-                using var reader = pragmaCommand.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    if (reader["name"].ToString() == "BuyCount")
-                    {
-                        hasBuyCount = true;
-                        break;
-                    }
-                }
-
-                if (!hasBuyCount)
-                {
-                    string addColumnSql = "ALTER TABLE Products ADD COLUMN BuyCount INTEGER DEFAULT 1";
-                    using var addCommand = new SqliteCommand(addColumnSql, connection);
-                    addCommand.ExecuteNonQuery();
-                    System.Diagnostics.Debug.WriteLine("Колонка BuyCount добавлена в таблицу Products");
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Ошибка при добавлении колонки: {ex.Message}");
             }
         }
 
@@ -90,13 +47,11 @@ namespace Lab4._5.Database
             connection.Open();
 
             string createTablesSql = @"
-                -- Таблица категорий
                 CREATE TABLE Categories (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name TEXT NOT NULL UNIQUE
                 );
 
-                -- Таблица товаров (соответствует вашей модели Product)
                 CREATE TABLE Products (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name TEXT NOT NULL,
@@ -113,13 +68,12 @@ namespace Lab4._5.Database
                     InStock INTEGER DEFAULT 0,
                     Rating REAL DEFAULT 0,
                     SoldCount INTEGER DEFAULT 0,
-                    ImagePaths TEXT,
+                    Image BLOB,
                     RelatedProductIds TEXT,
                     BuyCount INTEGER DEFAULT 1,
                     FOREIGN KEY(CategoryId) REFERENCES Categories(Id) ON DELETE SET NULL
                 );
 
-                -- Таблица заказов
                 CREATE TABLE Orders (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -127,7 +81,6 @@ namespace Lab4._5.Database
                     TotalAmount DECIMAL(10,2) NOT NULL
                 );
 
-                -- Таблица позиций заказа
                 CREATE TABLE OrderItems (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     OrderId INTEGER NOT NULL,
@@ -139,7 +92,6 @@ namespace Lab4._5.Database
                     FOREIGN KEY(ProductId) REFERENCES Products(Id) ON DELETE RESTRICT
                 );
 
-                -- Таблица для лога удалённых товаров
                 CREATE TABLE DeletedProductsLog (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     ProductName TEXT NOT NULL,
@@ -148,7 +100,6 @@ namespace Lab4._5.Database
                     DeletedBy TEXT DEFAULT 'System'
                 );
 
-                -- Триггер: при удалении товара записываем в лог
                 CREATE TRIGGER LogDeletedProduct
                 AFTER DELETE ON Products
                 BEGIN
@@ -156,7 +107,6 @@ namespace Lab4._5.Database
                     VALUES (OLD.Name, OLD.Id, 'Admin');
                 END;
 
-                -- Представление для топ-товаров
                 CREATE VIEW TopProductsView AS
                 SELECT 
                     p.Id,
@@ -172,7 +122,6 @@ namespace Lab4._5.Database
             using var command = new SqliteCommand(createTablesSql, connection);
             command.ExecuteNonQuery();
 
-            // Заполняем категории начальными данными
             InsertDefaultCategories(connection);
         }
 

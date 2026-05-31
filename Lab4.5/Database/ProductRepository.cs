@@ -16,19 +16,13 @@ namespace Lab4._5.Database
             _connectionString = connectionString;
         }
 
-        // Получить все товары
         public List<Product> GetAll()
         {
             var products = new List<Product>();
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
-            string sql = @"
-                SELECT p.*, c.Name as CategoryName 
-                FROM Products p
-                LEFT JOIN Categories c ON p.CategoryId = c.Id
-                ORDER BY p.Id";
-
+            string sql = "SELECT * FROM Products ORDER BY Id";
             using var command = new SqliteCommand(sql, connection);
             using var reader = command.ExecuteReader();
 
@@ -39,19 +33,13 @@ namespace Lab4._5.Database
             return products;
         }
 
-        // Асинхронная версия
         public async Task<List<Product>> GetAllAsync()
         {
             var products = new List<Product>();
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
-            string sql = @"
-                SELECT p.*, c.Name as CategoryName 
-                FROM Products p
-                LEFT JOIN Categories c ON p.CategoryId = c.Id
-                ORDER BY p.Id";
-
+            string sql = "SELECT * FROM Products ORDER BY Id";
             using var command = new SqliteCommand(sql, connection);
             using var reader = await command.ExecuteReaderAsync();
 
@@ -62,29 +50,21 @@ namespace Lab4._5.Database
             return products;
         }
 
-        // Получить один товар по ID
         public Product GetById(int id)
         {
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
-            string sql = @"
-                SELECT p.*, c.Name as CategoryName 
-                FROM Products p
-                LEFT JOIN Categories c ON p.CategoryId = c.Id
-                WHERE p.Id = @id";
-
+            string sql = "SELECT * FROM Products WHERE Id = @id";
             using var command = new SqliteCommand(sql, connection);
             command.Parameters.AddWithValue("@id", id);
 
             using var reader = command.ExecuteReader();
             if (reader.Read())
                 return MapToProduct(reader);
-
             return null;
         }
 
-        // Добавить товар (с поддержкой транзакции)
         public int Add(Product product, SqliteTransaction transaction = null)
         {
             string sql = @"
@@ -92,12 +72,12 @@ namespace Lab4._5.Database
                     Name, FullName, Description, CategoryId, 
                     Manufacturer, Country, Color, Size,
                     Price, Discount, Quantity, InStock, Rating, SoldCount,
-                    ImagePaths, RelatedProductIds
+                    Image, RelatedProductIds, BuyCount
                 ) VALUES (
                     @name, @fullName, @desc, @catId,
                     @manufacturer, @country, @color, @size,
                     @price, @discount, @quantity, @inStock, @rating, @soldCount,
-                    @imagePaths, @relatedIds
+                    @image, @relatedIds, @buyCount
                 );
                 SELECT last_insert_rowid();";
 
@@ -120,7 +100,6 @@ namespace Lab4._5.Database
             return newId;
         }
 
-        // Обновить товар
         public void Update(Product product, SqliteTransaction transaction = null)
         {
             string sql = @"
@@ -139,8 +118,9 @@ namespace Lab4._5.Database
                     InStock = @inStock,
                     Rating = @rating,
                     SoldCount = @soldCount,
-                    ImagePaths = @imagePaths,
-                    RelatedProductIds = @relatedIds
+                    Image = @image,
+                    RelatedProductIds = @relatedIds,
+                    BuyCount = @buyCount
                 WHERE Id = @id";
 
             var connection = transaction?.Connection ?? new SqliteConnection(_connectionString);
@@ -162,11 +142,9 @@ namespace Lab4._5.Database
                 connection.Close();
         }
 
-        // Удалить товар
         public void Delete(int id, SqliteTransaction transaction = null)
         {
             string sql = "DELETE FROM Products WHERE Id = @id";
-
             var connection = transaction?.Connection ?? new SqliteConnection(_connectionString);
             bool needClose = transaction == null;
 
@@ -176,7 +154,6 @@ namespace Lab4._5.Database
             using var command = new SqliteCommand(sql, connection);
             if (transaction != null)
                 command.Transaction = transaction;
-
             command.Parameters.AddWithValue("@id", id);
             command.ExecuteNonQuery();
 
@@ -184,46 +161,6 @@ namespace Lab4._5.Database
                 connection.Close();
         }
 
-        // Поиск по диапазону цен
-        public List<Product> GetByPriceRange(decimal minPrice, decimal maxPrice)
-        {
-            var products = new List<Product>();
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
-
-            string sql = "SELECT * FROM Products WHERE Price BETWEEN @min AND @max";
-            using var command = new SqliteCommand(sql, connection);
-            command.Parameters.AddWithValue("@min", minPrice);
-            command.Parameters.AddWithValue("@max", maxPrice);
-
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                products.Add(MapToProduct(reader));
-            }
-            return products;
-        }
-
-        // Вызов представления (эмуляция хранимой процедуры)
-        public List<(string Name, int TotalSold)> GetTopProducts()
-        {
-            var result = new List<(string, int)>();
-
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
-
-            string sql = "SELECT Name, TotalSold FROM TopProductsView";
-            using var command = new SqliteCommand(sql, connection);
-            using var reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                result.Add((reader.GetString(0), reader.GetInt32(1)));
-            }
-            return result;
-        }
-
-        // Маппинг из SqliteDataReader в Product
         private Product MapToProduct(SqliteDataReader reader)
         {
             var product = new Product
@@ -245,22 +182,19 @@ namespace Lab4._5.Database
                 SoldCount = reader.IsDBNull(14) ? 0 : reader.GetInt32(14),
             };
 
-            // Десериализация JSON-полей
+            // Чтение BLOB изображения
             if (!reader.IsDBNull(15))
             {
-                var imagePathsJson = reader.GetString(15);
-                try
+                long blobLength = reader.GetBytes(15, 0, null, 0, 0);
+                if (blobLength > 0)
                 {
-                    var paths = JsonSerializer.Deserialize<List<string>>(imagePathsJson);
-                    if (paths != null)
-                    {
-                        foreach (var path in paths)
-                            product.ImagePaths.Add(path);
-                    }
+                    byte[] imageBytes = new byte[blobLength];
+                    reader.GetBytes(15, 0, imageBytes, 0, imageBytes.Length);
+                    product.Image = imageBytes;
                 }
-                catch { }
             }
 
+            // Десериализация RelatedProductIds
             if (!reader.IsDBNull(16))
             {
                 var relatedJson = reader.GetString(16);
@@ -271,10 +205,15 @@ namespace Lab4._5.Database
                 catch { }
             }
 
+            // BuyCount
+            if (!reader.IsDBNull(17))
+            {
+                product.BuyCount = reader.GetInt32(17);
+            }
+
             return product;
         }
 
-        // Добавление параметров в команду
         private void AddParameters(SqliteCommand command, Product product)
         {
             command.Parameters.AddWithValue("@name", product.Name ?? "");
@@ -291,13 +230,61 @@ namespace Lab4._5.Database
             command.Parameters.AddWithValue("@inStock", product.InStock ? 1 : 0);
             command.Parameters.AddWithValue("@rating", product.Rating);
             command.Parameters.AddWithValue("@soldCount", product.SoldCount);
+            command.Parameters.AddWithValue("@buyCount", product.BuyCount);
 
-            // Сериализуем коллекции в JSON
-            var imagePathsJson = JsonSerializer.Serialize(product.ImagePaths?.ToList() ?? new List<string>());
-            command.Parameters.AddWithValue("@imagePaths", imagePathsJson);
+            // BLOB параметр
+            if (product.Image != null && product.Image.Length > 0)
+            {
+                command.Parameters.AddWithValue("@image", product.Image);
+            }
+            else
+            {
+                command.Parameters.AddWithValue("@image", DBNull.Value);
+            }
 
             var relatedIdsJson = JsonSerializer.Serialize(product.RelatedProductIds ?? new List<int>());
             command.Parameters.AddWithValue("@relatedIds", relatedIdsJson);
+        }
+        // ========== ДОБАВИТЬ ПЕРЕД ПОСЛЕДНЕЙ СКОБКОЙ ==========
+
+        // Получить топ-товары (из представления TopProductsView)
+        public List<(string Name, int TotalSold)> GetTopProducts()
+        {
+            var result = new List<(string, int)>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            string sql = "SELECT Name, TotalSold FROM TopProductsView LIMIT 10";
+            using var command = new SqliteCommand(sql, connection);
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                result.Add((reader.GetString(0), reader.GetInt32(1)));
+            }
+            return result;
+        }
+
+        // Поиск по диапазону цен
+        public List<Product> GetByPriceRange(decimal minPrice, decimal maxPrice)
+        {
+            var products = new List<Product>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            string sql = "SELECT * FROM Products WHERE Price BETWEEN @min AND @max";
+            using var command = new SqliteCommand(sql, connection);
+            command.Parameters.AddWithValue("@min", minPrice);
+            command.Parameters.AddWithValue("@max", maxPrice);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                products.Add(MapToProduct(reader));
+            }
+            return products;
         }
     }
 }

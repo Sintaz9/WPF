@@ -26,7 +26,6 @@ namespace Lab4._5.Views
 
             if (editWindow.ShowDialog() == true && editWindow.EditedProduct != null)
             {
-                // Обновляем данные текущего товара
                 SelectedProduct = editWindow.EditedProduct;
                 DataContext = null;
                 DataContext = this;
@@ -48,6 +47,7 @@ namespace Lab4._5.Views
                 Close();
             }
         }
+
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;

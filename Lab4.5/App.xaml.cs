@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using Lab4._5.Database;  // Добавляем using для DatabaseHelper
+using Lab4._5.Database;
 
 namespace Lab4._5
 {
@@ -10,27 +10,19 @@ namespace Lab4._5
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            // ========== НОВЫЙ КОД: Инициализация базы данных ==========
             try
             {
                 DatabaseHelper.InitializeDatabase();
-                // Можно добавить логирование успеха, если нужно
-                // System.Diagnostics.Debug.WriteLine("БД успешно инициализирована");
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при инициализации базы данных:\n{ex.Message}",
                     "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            // ========== КОНЕЦ НОВОГО КОДА ==========
-
-            // Язык уже загружен в App.xaml, ничего не делаем
         }
 
         public static void SwitchLanguage(string lang)
         {
-            // Найти и удалить старый языковой словарь (содержит "Strings" в пути)
             var oldDict = Current.Resources.MergedDictionaries
                 .FirstOrDefault(d => d.Source != null && d.Source.OriginalString.Contains("Strings"));
 
@@ -49,18 +41,15 @@ namespace Lab4._5
 
         public static void SwitchTheme(string themeName)
         {
-            // Найти и удалить старый словарь темы (содержит "Themes/" в пути)
             var oldDict = Current.Resources.MergedDictionaries
                 .FirstOrDefault(d => d.Source != null && d.Source.OriginalString.Contains("Themes/"));
 
             if (oldDict != null)
                 Current.Resources.MergedDictionaries.Remove(oldDict);
 
-            // Создать новый словарь темы
             var dict = new ResourceDictionary();
             dict.Source = new Uri($"Themes/{themeName}.xaml", UriKind.Relative);
 
-            // Вставить после языкового словаря
             Current.Resources.MergedDictionaries.Insert(1, dict);
         }
     }

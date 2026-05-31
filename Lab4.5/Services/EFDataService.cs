@@ -32,8 +32,6 @@ namespace Lab4._5.Services
                 product.Country = "";
             if (string.IsNullOrWhiteSpace(product.Manufacturer))
                 product.Manufacturer = "";
-            if (product.ImagePaths == null)
-                product.ImagePaths = new System.Collections.ObjectModel.ObservableCollection<string>();
             if (product.RelatedProductIds == null)
                 product.RelatedProductIds = new List<int>();
 

@@ -22,22 +22,12 @@ namespace Lab4._5.Models
         private int _soldCount;
         private string _manufacturer;
         private int _buyCount = 1;
+        private byte[] _image; // ← НОВОЕ: массив байтов для картинки
 
         public int BuyCount
         {
             get => _buyCount;
-            set
-            {
-                _buyCount = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<string> _imagePaths;
-
-        public Product()
-        {
-            _imagePaths = new ObservableCollection<string>();
+            set { _buyCount = value; OnPropertyChanged(); }
         }
 
         public int Id
@@ -87,14 +77,16 @@ namespace Lab4._5.Models
         public int Quantity
         {
             get => _quantity;
-            set { 
-                _quantity = value; 
+            set
+            {
+                _quantity = value;
                 if (BuyCount > _quantity)
-                    {
-                        BuyCount = _quantity > 0 ? _quantity : 1;
-                    }
-                OnPropertyChanged(); OnPropertyChanged(nameof(InStock)); 
+                {
+                    BuyCount = _quantity > 0 ? _quantity : 1;
                 }
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(InStock));
+            }
         }
 
         public string Color
@@ -139,29 +131,17 @@ namespace Lab4._5.Models
             set { _manufacturer = value; OnPropertyChanged(); }
         }
 
-        public ObservableCollection<string> ImagePaths
+        // НОВОЕ: картинка как массив байтов
+        public byte[] Image
         {
-            get => _imagePaths;
-            set { _imagePaths = value; OnPropertyChanged(); }
+            get => _image;
+            set { _image = value; OnPropertyChanged(); }
         }
 
-        // Для удобства отображения первого изображения
-        public string FirstImagePath
-        {
-            get
-            {
-                if (ImagePaths != null && ImagePaths.Count > 0)
-                {
-                    // Проверяем существует ли файл
-                    if (System.IO.File.Exists(ImagePaths[0]))
-                        return ImagePaths[0];
-                }
-                return null;
-            }
-        }
         public decimal FinalPrice => Price - (Price * (decimal)(Discount / 100));
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         public bool Buy(int count = 1)
         {
             if (Quantity >= count)
@@ -172,11 +152,12 @@ namespace Lab4._5.Models
             }
             return false;
         }
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        // Навигационное свойство для EF (многие к одному)
+
         public virtual Category Category { get; set; }
     }
 }

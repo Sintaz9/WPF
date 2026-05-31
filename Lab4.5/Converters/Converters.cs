@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Lab4._5.Models;
 
 namespace Lab4._5.Converters
@@ -12,11 +14,8 @@ namespace Lab4._5.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             bool boolValue = value is bool b && b;
-
-            // Если параметр "invert" — инвертируем
             if (parameter is string param && param == "invert")
                 boolValue = !boolValue;
-
             return boolValue ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -49,20 +48,7 @@ namespace Lab4._5.Converters
             throw new NotImplementedException();
         }
     }
-    public class CountToVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is int count && count > 0)
-                return Visibility.Visible;
-            return Visibility.Collapsed;
-        }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
     public class StockToTextConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -136,8 +122,41 @@ namespace Lab4._5.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is decimal price)
-                return string.Format("{0:F2} P", price);
-            return "0 P";
+                return string.Format("{0:F2} ₽", price);
+            return "0 ₽";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ByteArrayToImageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is byte[] bytes && bytes.Length > 0)
+            {
+                try
+                {
+                    using (var stream = new MemoryStream(bytes))
+                    {
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.StreamSource = stream;
+                        image.CacheOption = BitmapCacheOption.OnLoad;
+                        image.EndInit();
+                        image.Freeze();
+                        return image;
+                    }
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
